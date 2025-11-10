@@ -25,6 +25,7 @@ struct MotorHandConfig {
 /// Client responsible for serializing commands to the device.
 class MotorHandProClient {
     private MotorHandConfig config;
+    private size_t sequenceCounter;
 
     this(MotorHandConfig config) {
         enforce(config.outputDirectory.length > 0, "Output directory required");
@@ -44,8 +45,10 @@ class MotorHandProClient {
         auto payloadString = payload.toString();
         enforce(!payloadString.empty, "Failed to encode Motor Hand Pro command");
 
-        auto fileName = buildPath(config.outputDirectory,
-                                  format("motor_command_%s.json", timestamp.stdTime));
+        auto fileName = buildPath(
+            config.outputDirectory,
+            format("motor_command_%s_%06d.json", timestamp.stdTime, sequenceCounter));
+        sequenceCounter++;
         scope (failure) {
             stderr.writeln("MotorHandProClient: failed to persist command payload.");
         }

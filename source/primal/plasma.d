@@ -1,7 +1,7 @@
 module primal.plasma;
 
 import std.algorithm : map, sum;
-import std.math : exp, sqrt;
+import std.math : exp, sqrt, abs;
 import std.range : iota;
 
 import primal.config;
