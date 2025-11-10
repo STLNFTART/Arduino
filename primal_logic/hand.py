@@ -5,17 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-import numpy as np
-
 from .adaptive import adaptive_alpha
-from .constants import (
-    DEFAULT_FINGERS,
-    DT,
-    HAND_DAMPING,
-    HAND_MASS,
-    JOINTS_PER_FINGER,
-    LAMBDA_DEFAULT,
-)
+from .constants import DEFAULT_FINGERS, DT, HAND_DAMPING, HAND_MASS, JOINTS_PER_FINGER, LAMBDA_DEFAULT
 from .memory import ExponentialMemoryKernel
 from .serial_bridge import SerialHandBridge
 from .utils import safe_clip
@@ -58,6 +49,7 @@ class HandJointController:
         step: int,
     ) -> float:
         """Compute torque using PD and adaptive memory contributions."""
+
         avg_energy = abs(state.angle) + abs(state.velocity)
         alpha = adaptive_alpha(step, avg_energy=avg_energy, quantum_coherence=coherence)
 
@@ -84,13 +76,15 @@ class RoboticHand:
     damping: float = HAND_DAMPING
     bridge: Optional[SerialHandBridge] = None
 
-    states: np.ndarray = field(init=False)
+    states: List[List[JointState]] = field(init=False)
     controllers: List[List[HandJointController]] = field(init=False)
 
     def __post_init__(self) -> None:
-        self.states = np.empty((self.n_fingers, self.n_joints_per_finger), dtype=object)
+        self.states = [
+            [JointState() for _ in range(self.n_joints_per_finger)] for _ in range(self.n_fingers)
+        ]
         self.controllers = []
-        for finger in range(self.n_fingers):
+        for _finger in range(self.n_fingers):
             finger_ctrls: List[HandJointController] = []
             for _ in range(self.n_joints_per_finger):
                 finger_ctrls.append(
@@ -101,17 +95,14 @@ class RoboticHand:
                 )
             self.controllers.append(finger_ctrls)
 
-        for finger in range(self.n_fingers):
-            for joint in range(self.n_joints_per_finger):
-                self.states[finger, joint] = JointState()
-
-    def step(self, desired_angles: np.ndarray, theta: float, coherence: float, step: int) -> None:
+    def step(self, desired_angles: List[List[float]], theta: float, coherence: float, step: int) -> None:
         """Advance the hand dynamics by one time step."""
+
         for finger in range(self.n_fingers):
             for joint in range(self.n_joints_per_finger):
-                state: JointState = self.states[finger, joint]
+                state: JointState = self.states[finger][joint]
                 controller = self.controllers[finger][joint]
-                target_angle = float(desired_angles[finger, joint])
+                target_angle = float(desired_angles[finger][joint])
                 torque = controller.compute_torque(target_angle, state, theta, coherence, step)
 
                 acceleration = (torque - self.damping * state.velocity) / self.mass
@@ -124,24 +115,18 @@ class RoboticHand:
         if self.bridge is not None:
             self.apply_torques()
 
-    def get_angles(self) -> np.ndarray:
+    def get_angles(self) -> List[List[float]]:
         """Return a copy of all joint angles for downstream analysis."""
-        angles = np.zeros((self.n_fingers, self.n_joints_per_finger))
-        for finger in range(self.n_fingers):
-            for joint in range(self.n_joints_per_finger):
-                state: JointState = self.states[finger, joint]
-                angles[finger, joint] = state.angle
-        return angles
 
-    def get_torques(self) -> np.ndarray:
+        return [[state.angle for state in finger] for finger in self.states]
+
+    def get_torques(self) -> List[List[float]]:
         """Return the latest torques from each controller."""
-        torques = np.zeros((self.n_fingers, self.n_joints_per_finger))
-        for finger in range(self.n_fingers):
-            for joint in range(self.n_joints_per_finger):
-                torques[finger, joint] = self.controllers[finger][joint].last_tau
-        return torques
+
+        return [[ctrl.last_tau for ctrl in finger] for finger in self.controllers]
 
     def apply_torques(self) -> None:
         """Send torques to the hardware bridge if available."""
+
         if self.bridge is not None:
             self.bridge.send(self.get_torques())

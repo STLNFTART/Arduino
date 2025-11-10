@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import numpy as np
+from typing import Tuple
 
 # Versioning for traceability
 VERSION: str = "v1.0.0"
@@ -20,8 +20,8 @@ K_COUPLING: float = 0.5
 GAMMA: float = 0.2
 
 # === Temporal and spatial scales ===
-TEMPORAL_SCALES: np.ndarray = np.array([0.1e-3, 1.0e-3, 10.0e-3, 100.0e-3])
-SPATIAL_SCALES: np.ndarray = np.array([0.1e-3, 1.0e-3, 5.0e-3, 20.0e-3])
+TEMPORAL_SCALES: Tuple[float, ...] = (0.1e-3, 1.0e-3, 10.0e-3, 100.0e-3)
+SPATIAL_SCALES: Tuple[float, ...] = (0.1e-3, 1.0e-3, 5.0e-3, 20.0e-3)
 
 # === Energy/phase coupling parameters ===
 ENERGY_BUDGET: float = 1.0

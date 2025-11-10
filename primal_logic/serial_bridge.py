@@ -5,7 +5,7 @@ from __future__ import annotations
 import logging
 from typing import Iterable
 
-import numpy as np
+from .utils import safe_clip
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +25,7 @@ class SerialHandBridge:
         logger.info("Serial bridge opened on %s at %d baud", port, baud)
 
     def send(self, torques: Iterable[Iterable[float]]) -> None:
-        flat = np.clip(np.fromiter((x for row in torques for x in row), dtype=float), -1.0, 1.0)
+        flat = [safe_clip(value, -1.0, 1.0) for row in torques for value in row]
         line = ",".join(f"{value:.3f}" for value in flat) + "\n"
         self._serial.write(line.encode("ascii"))
         logger.debug("Sent torques: %s", line.strip())

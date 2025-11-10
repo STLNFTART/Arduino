@@ -2,10 +2,10 @@
 
 from __future__ import annotations
 
-import numpy as np
+import math
 
 from .constants import ALPHA_DEFAULT, DT, EPSILON, GAMMA, K_COUPLING, LAMBDA_DEFAULT
-from .utils import laplacian_2d, safe_clip
+from .utils import laplacian_2d, safe_clip, zeros
 
 
 class PrimalLogicField:
@@ -29,29 +29,48 @@ class PrimalLogicField:
         self.gamma = gamma
         self.epsilon = epsilon
 
-        # Initialize real and imaginary components of the field to zero.
-        self.psi_r = np.zeros((nx, ny), dtype=float)
-        self.psi_i = np.zeros((nx, ny), dtype=float)
-        self.gamma_field = np.zeros((nx, ny), dtype=float)
+        # Real and imaginary components of the field. Each entry stores a
+        # float so we can run entirely on the Python standard library.
+        self.psi_r = zeros((nx, ny))
+        self.psi_i = zeros((nx, ny))
+        self.gamma_field = zeros((nx, ny))
 
     def step(self, theta: float) -> float:
         """Advance the field by one integration step and return coherence."""
+
         lap_r = laplacian_2d(self.psi_r)
         lap_i = laplacian_2d(self.psi_i)
 
-        dpsi_r = -self.lam * self.psi_r + self.coupling * lap_r + self.gamma * self.gamma_field + self.alpha * theta
-        dpsi_i = (
-            -self.lam * self.psi_i
-            + self.coupling * lap_i
-            + self.gamma * self.gamma_field
-            + self.alpha * theta
-            + self.epsilon * self.psi_r
-        )
+        for i in range(self.nx):
+            for j in range(self.ny):
+                dpsi_r = (
+                    -self.lam * self.psi_r[i][j]
+                    + self.coupling * lap_r[i][j]
+                    + self.gamma * self.gamma_field[i][j]
+                    + self.alpha * theta
+                )
+                dpsi_i = (
+                    -self.lam * self.psi_i[i][j]
+                    + self.coupling * lap_i[i][j]
+                    + self.gamma * self.gamma_field[i][j]
+                    + self.alpha * theta
+                    + self.epsilon * self.psi_r[i][j]
+                )
 
-        self.psi_r += DT * dpsi_r
-        self.psi_i += DT * dpsi_i
+                self.psi_r[i][j] += DT * dpsi_r
+                self.psi_i[i][j] += DT * dpsi_i
 
-        numerator = float(np.sum(self.psi_r * self.psi_i))
-        denominator = float(np.linalg.norm(self.psi_r) * np.linalg.norm(self.psi_i) + 1e-9)
+        numerator = 0.0
+        norm_r = 0.0
+        norm_i = 0.0
+        for i in range(self.nx):
+            for j in range(self.ny):
+                r_val = self.psi_r[i][j]
+                i_val = self.psi_i[i][j]
+                numerator += r_val * i_val
+                norm_r += r_val * r_val
+                norm_i += i_val * i_val
+
+        denominator = math.sqrt(norm_r + 1e-12) * math.sqrt(norm_i + 1e-12) + 1e-9
         coherence = abs(numerator / denominator)
         return safe_clip(coherence, 0.0, 1.0)

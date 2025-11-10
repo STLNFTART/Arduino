@@ -1,4 +1,4 @@
-"""Data analysis utilities using pandas for rolling statistics."""
+"""Data analysis utilities using a lightweight pandas-compatible layer."""
 
 from __future__ import annotations
 
@@ -18,7 +18,8 @@ def plot_rolling_average(
     window: int,
     output_path: Optional[Path] = None,
 ) -> Path:
-    """Compute and plot a rolling average using pandas."""
+    """Compute and plot a rolling average using pandas-style operations."""
+
     if window <= 0:
         raise ValueError("window must be positive")
 
@@ -28,15 +29,15 @@ def plot_rolling_average(
     if column not in df.columns:
         raise KeyError(f"Column '{column}' not found. Available columns: {list(df.columns)}")
 
-    rolling = df[column].rolling(window=window, min_periods=1).mean()
-    df[f"{column}_rolling_{window}"] = rolling
+    rolling_series = df[column].rolling(window=window, min_periods=1).mean()
+    df[f"{column}_rolling_{window}"] = rolling_series
 
     if output_path is None:
         output_path = csv_path.with_suffix(".png")
 
     fig, ax = plt.subplots(figsize=(10, 4))
-    ax.plot(df.index, df[column], label=column, alpha=0.5)
-    ax.plot(df.index, rolling, label=f"rolling_mean_{window}", linewidth=2.0)
+    ax.plot(list(df.index), list(df[column]), label=column, alpha=0.5)
+    ax.plot(list(df.index), list(rolling_series), label=f"rolling_mean_{window}", linewidth=2.0)
     ax.set_xlabel("Sample")
     ax.set_ylabel(column)
     ax.set_title(f"Rolling average of {column} (window={window})")
