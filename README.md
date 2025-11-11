@@ -23,6 +23,10 @@ leverage real Pandas/Matplotlib or bundled offline fallbacks for air-gapped envi
 - `tests/` – Pytest suite covering the controller, sweeps, and plotting utilities.
 - `vendor/` – Lightweight fallbacks for Pandas/Matplotlib used when the real libraries are missing.
 - `external/` – Integration hooks and submodules such as `MotorHandPro`.
+   codex/fix-bugs-flagged-during-codex-review
+- `tools/` – Command-line utilities (e.g., `repo_inventory.py`).
+=======
+    codex/convert-latex-document-to-dlang-codebase
 - `main.py` – CLI demo that runs a grasp trajectory and optionally logs torques to disk.
 
 ## Dependencies
@@ -69,8 +73,23 @@ artifacts so the workflow remains reproducible.
    python3 demos/demo_cryo.py
    python3 demos/demo_rrt_rif.py
    ```
+   codex/fix-bugs-flagged-during-codex-review
+
+5. **Repository inventory dataset** – generate CSV/Markdown summaries for reporting:
+   ```bash
+   python3 tools/repo_inventory.py
+   ```
+   The generator now walks the entire tree recursively so nested files and
+   directories are captured in the exported tables, ensuring downstream reports
+   always reflect the latest changes. The output now begins with a leading `./`
+   summary row that aggregates the total file count and byte size for a quick
+   top-level sanity check.
+
+6. **Motor Hand Pro bridge** – fetch the hardware integration submodule:
+=======
 
 5. **Motor Hand Pro bridge** – fetch the hardware integration submodule:
+  codex/convert-latex-document-to-dlang-codebase
    ```bash
    git submodule update --init --recursive
    ```
