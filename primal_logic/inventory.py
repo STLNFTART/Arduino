@@ -123,20 +123,22 @@ def gather_inventory(root: Path) -> List[Entry]:
             )
         )
 
-    # Include a final aggregate entry for the repository root so reports always
-    # display an overall summary even if callers only inspect the first few
-    # rows.  This helps reviewers notice that new files were discovered during
-    # recursive traversal.
+    # Include a leading aggregate entry for the repository root so reports
+    # always display an overall summary even if callers only inspect the first
+    # few rows.  This helps reviewers notice that new files were discovered
+    # during recursive traversal and mirrors the behaviour of conventional
+    # disk-usage tools that front-load totals.
     total_files = sum(entry.file_count for entry in entries if entry.kind == "file")
     total_size = sum(entry.byte_size for entry in entries if entry.kind == "file")
-    entries.append(
+    entries.insert(
+        0,
         Entry(
             path="./",
             kind="directory",
             file_count=total_files,
             byte_size=total_size,
             notes="root summary",
-        )
+        ),
     )
 
     return entries

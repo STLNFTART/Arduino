@@ -19,14 +19,14 @@ def test_gather_inventory_returns_entries(tmp_path: Path) -> None:
     entries = gather_inventory(tmp_path)
     paths = {entry.path for entry in entries}
 
+    assert entries[0].path == "./"
     assert "file.txt" in paths
     assert "empty_dir/" in paths
     assert "nested/deeper/inner.txt" in paths
     assert "nested/" in paths
     assert "nested/deeper/" in paths
-    assert "./" in paths
 
-    root_entry = next(entry for entry in entries if entry.path == "./")
+    root_entry = entries[0]
     # Two files present in the fixture and both should be counted in the root summary.
     assert root_entry.file_count == 2
     assert root_entry.byte_size == len("demo") + len("more")

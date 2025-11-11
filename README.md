@@ -77,7 +77,7 @@ artifacts so the workflow remains reproducible.
    ```
    The generator now walks the entire tree recursively so nested files and
    directories are captured in the exported tables, ensuring downstream reports
-   always reflect the latest changes. The output includes a trailing `./`
+   always reflect the latest changes. The output now begins with a leading `./`
    summary row that aggregates the total file count and byte size for a quick
    top-level sanity check.
 
