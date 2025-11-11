@@ -24,6 +24,12 @@ def test_gather_inventory_returns_entries(tmp_path: Path) -> None:
     assert "nested/deeper/inner.txt" in paths
     assert "nested/" in paths
     assert "nested/deeper/" in paths
+    assert "./" in paths
+
+    root_entry = next(entry for entry in entries if entry.path == "./")
+    # Two files present in the fixture and both should be counted in the root summary.
+    assert root_entry.file_count == 2
+    assert root_entry.byte_size == len("demo") + len("more")
 
     # CSV should write without error.
     csv_path = tmp_path / "inventory.csv"

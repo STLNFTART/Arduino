@@ -77,7 +77,9 @@ artifacts so the workflow remains reproducible.
    ```
    The generator now walks the entire tree recursively so nested files and
    directories are captured in the exported tables, ensuring downstream reports
-   always reflect the latest changes.
+   always reflect the latest changes. The output includes a trailing `./`
+   summary row that aggregates the total file count and byte size for a quick
+   top-level sanity check.
 
 6. **Motor Hand Pro bridge** – fetch the hardware integration submodule:
    ```bash
