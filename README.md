@@ -75,6 +75,9 @@ artifacts so the workflow remains reproducible.
    ```bash
    python3 tools/repo_inventory.py
    ```
+   The generator now walks the entire tree recursively so nested files and
+   directories are captured in the exported tables, ensuring downstream reports
+   always reflect the latest changes.
 
 6. **Motor Hand Pro bridge** – fetch the hardware integration submodule:
    ```bash

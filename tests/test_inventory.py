@@ -9,14 +9,21 @@ from primal_logic.inventory import gather_inventory, render_markdown_table, writ
 
 def test_gather_inventory_returns_entries(tmp_path: Path) -> None:
     (tmp_path / "empty_dir").mkdir()
+    nested_dir = tmp_path / "nested" / "deeper"
+    nested_dir.mkdir(parents=True)
     file_path = tmp_path / "file.txt"
     file_path.write_text("demo", encoding="utf-8")
+    nested_file = nested_dir / "inner.txt"
+    nested_file.write_text("more", encoding="utf-8")
 
     entries = gather_inventory(tmp_path)
     paths = {entry.path for entry in entries}
 
     assert "file.txt" in paths
     assert "empty_dir/" in paths
+    assert "nested/deeper/inner.txt" in paths
+    assert "nested/" in paths
+    assert "nested/deeper/" in paths
 
     # CSV should write without error.
     csv_path = tmp_path / "inventory.csv"

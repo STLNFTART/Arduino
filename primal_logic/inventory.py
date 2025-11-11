@@ -13,7 +13,7 @@ import csv
 import logging
 from dataclasses import dataclass, asdict
 from pathlib import Path
-from typing import Iterable, List, Sequence
+from typing import List, Sequence
 
 logger = logging.getLogger(__name__)
 
@@ -48,71 +48,80 @@ class Entry:
     notes: str = ""
 
 
-def _iter_files(target: Path) -> Iterable[Path]:
-    """Yield all files under *target* recursively."""
-
-    for item in target.rglob("*"):
-        if item.is_file():
-            yield item
-
-
-def _format_path(path: Path, root: Path) -> str:
-    """Return a POSIX-style, repository-relative path string."""
-
-    return path.relative_to(root).as_posix()
-
-
 def gather_inventory(root: Path) -> List[Entry]:
     """Collect repository metadata starting at *root*.
 
-    Parameters
-    ----------
-    root:
-        Repository root directory. The caller is expected to pass
-        ``Path(__file__).resolve().parents[1]`` or similar.
-
-    Returns
-    -------
-    List[Entry]
-        Sorted list of metadata entries, suitable for tabular presentation.
+    The earlier implementation only enumerated the first level of the
+    repository tree, which meant nested changes failed to appear in generated
+    inventories. To guarantee that "all changes show up" we now traverse the
+    tree recursively, recording a row for every file and directory (excluding
+    the Git metadata folder). Directory statistics aggregate the total number of
+    descendant files and their combined size to provide a concise overview.
     """
 
     if not root.exists():
         raise FileNotFoundError(f"Repository root does not exist: {root}")
 
-    entries: List[Entry] = []
-    for item in sorted(root.iterdir()):
-        if item.name == ".git":
+    files: List[Path] = []
+    file_sizes: dict[Path, int] = {}
+    directories: set[Path] = set()
+
+    for path in root.rglob("*"):
+        relative = path.relative_to(root)
+
+        if ".git" in relative.parts:
             # Internal VCS data; not part of the presentation dataset.
             continue
 
-        if item.is_file():
-            size = item.stat().st_size
-            entries.append(
-                Entry(
-                    path=_format_path(item, root),
-                    kind="file",
-                    file_count=1,
-                    byte_size=size,
-                    notes="empty" if size == 0 else "",
-                )
-            )
-        elif item.is_dir():
-            files = list(_iter_files(item))
-            file_count = len(files)
-            byte_size = sum(f.stat().st_size for f in files)
-            note = "no files" if file_count == 0 else ""
-            entries.append(
-                Entry(
-                    path=_format_path(item, root) + "/",
-                    kind="directory",
-                    file_count=file_count,
-                    byte_size=byte_size,
-                    notes=note,
-                )
-            )
+        if relative == Path("."):
+            continue
+
+        if path.is_file():
+            size = path.stat().st_size
+            files.append(relative)
+            file_sizes[relative] = size
+            for parent in relative.parents:
+                if parent == Path("."):
+                    break
+                directories.add(parent)
+        elif path.is_dir():
+            directories.add(relative)
         else:
-            logger.debug("Skipping non-standard path: %s", item)
+            logger.debug("Skipping non-standard path: %s", path)
+
+    entries: List[Entry] = []
+
+    for relative in sorted(files, key=lambda p: p.as_posix()):
+        size = file_sizes[relative]
+        entries.append(
+            Entry(
+                path=relative.as_posix(),
+                kind="file",
+                file_count=1,
+                byte_size=size,
+                notes="empty" if size == 0 else "",
+            )
+        )
+
+    for directory in sorted(directories, key=lambda p: p.as_posix()):
+        dir_parts = directory.parts
+        count = 0
+        total_size = 0
+        for file_path, size in file_sizes.items():
+            if file_path.parts[: len(dir_parts)] == dir_parts:
+                count += 1
+                total_size += size
+
+        note = "no files" if count == 0 else ""
+        entries.append(
+            Entry(
+                path=directory.as_posix().rstrip("/") + "/",
+                kind="directory",
+                file_count=count,
+                byte_size=total_size,
+                notes=note,
+            )
+        )
 
     return entries
 
