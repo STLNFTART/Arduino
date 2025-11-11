@@ -15,3 +15,13 @@ def test_hand_advances_and_clamps_angles() -> None:
     for row in angles:
         for angle in row:
             assert hand.joint_limits.angle_min <= angle <= hand.joint_limits.angle_max
+
+
+def test_hand_supports_recursive_planck_memory() -> None:
+    hand = RoboticHand(memory_mode="recursive_planck", rpo_alpha=0.35)
+    desired = [
+        [0.8 for _ in range(hand.n_joints_per_finger)] for _ in range(hand.n_fingers)
+    ]
+    hand.step(desired, theta=0.9, coherence=0.4, step=1)
+    torques = hand.get_torques()
+    assert len(torques) == hand.n_fingers

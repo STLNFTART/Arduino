@@ -8,6 +8,8 @@ from .constants import (
     ALPHA_DEFAULT,
     DT,
     ENERGY_BUDGET,
+    LIGHTFOOT_MAX,
+    LIGHTFOOT_MIN,
     PHASE_COUPLING,
     SIGMA,
     SPATIAL_SCALES,
@@ -36,4 +38,4 @@ def adaptive_alpha(
         temporal_influence += spatial_ratio * math.cos(step * DT / max(scale, 1e-9))
 
     alpha = base + energy_scaling + coherence_term + 0.1 * temporal_influence
-    return float(min(max(alpha, 0.52), 0.56))
+    return float(min(max(alpha, LIGHTFOOT_MIN), LIGHTFOOT_MAX))

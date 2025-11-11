@@ -5,6 +5,7 @@ from __future__ import annotations
 import math
 
 from .constants import DT, LAMBDA_DEFAULT
+from .rpo import RecursivePlanckMemoryKernel
 
 
 class ExponentialMemoryKernel:
@@ -15,7 +16,7 @@ class ExponentialMemoryKernel:
         self.gain = gain
         self._memory = 0.0
 
-    def update(self, theta: float, error: float) -> float:
+    def update(self, theta: float, error: float, step_index: int | None = None) -> float:
         """Update the memory state using exponential decay."""
         decay = math.exp(-self.lam * DT)
         self._memory = decay * self._memory + theta * error * DT
@@ -25,3 +26,6 @@ class ExponentialMemoryKernel:
     def state(self) -> float:
         """Expose the current memory state for diagnostics."""
         return self._memory
+
+
+__all__ = ["ExponentialMemoryKernel", "RecursivePlanckMemoryKernel"]

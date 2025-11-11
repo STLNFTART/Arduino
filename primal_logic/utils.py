@@ -99,8 +99,8 @@ def laplacian_2d(field: Matrix, dx: Number = 1.0, dy: Number = 1.0) -> Matrix:
     return lap
 
 
-def write_csv(path: str, header: Sequence[str], rows: Iterable[Sequence[Number]]) -> None:
-    """Write rows of numeric data to *path* with *header* columns."""
+def write_csv(path: str, header: Sequence[str], rows: Iterable[Sequence[object]]) -> None:
+    """Write rows of tabular data to *path* with *header* columns."""
 
     import csv
 
@@ -108,5 +108,11 @@ def write_csv(path: str, header: Sequence[str], rows: Iterable[Sequence[Number]]
         writer = csv.writer(handle)
         writer.writerow(header)
         for row in rows:
-            writer.writerow([f"{float(value):.9f}" for value in row])
+            formatted = []
+            for value in row:
+                if isinstance(value, (int, float)):
+                    formatted.append(f"{float(value):.9f}")
+                else:
+                    formatted.append(str(value))
+            writer.writerow(formatted)
 

@@ -22,13 +22,18 @@ def _average_angle(angles: List[List[float]]) -> float:
     return mean(flatten(angles))
 
 
-def run_demo(steps: int = 3000, log_path: Optional[Path] = None) -> None:
+def run_demo(
+    steps: int = 3000,
+    log_path: Optional[Path] = None,
+    memory_mode: str = "exponential",
+    rpo_alpha: float = 0.4,
+) -> None:
     """Run a simulation demo and optionally log torques to disk."""
 
     configure_logging()
 
     bridge = SerialHandBridge(SERIAL_PORT, SERIAL_BAUD) if USE_SERIAL else None
-    hand = RoboticHand(bridge=bridge)
+    hand = RoboticHand(bridge=bridge, memory_mode=memory_mode, rpo_alpha=rpo_alpha)
     field = PrimalLogicField(nx=8, ny=8)
 
     if log_path is not None:

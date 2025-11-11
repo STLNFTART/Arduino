@@ -16,7 +16,7 @@ from .constants import (
     JOINTS_PER_FINGER,
     LAMBDA_DEFAULT,
 )
-from .memory import ExponentialMemoryKernel
+from .memory import ExponentialMemoryKernel, RecursivePlanckMemoryKernel
 from .serial_bridge import SerialHandBridge
 from .utils import safe_clip
 
@@ -71,7 +71,7 @@ class HandJointController:
         error = desired_angle - state.angle
         d_error = -state.velocity
 
-        u_mem = self.mem_kernel.update(theta=theta, error=error)
+        u_mem = self.mem_kernel.update(theta=theta, error=error, step_index=step)
         u_pd = alpha * (self.kp * error + self.kd * d_error)
 
         tau = safe_clip(u_pd + u_mem, -self.limits.torque_max, self.limits.torque_max)
@@ -92,6 +92,8 @@ class RoboticHand:
     alpha_base: float = ALPHA_DEFAULT
     beta_gain: float = BETA_DEFAULT
     bridge: Optional[SerialHandBridge] = None
+    memory_mode: str = "exponential"
+    rpo_alpha: float = 0.4  # ensures alpha * dt < 1.0 for dt = 1e-3
 
     states: List[List[JointState]] = field(init=False)
     controllers: List[List[HandJointController]] = field(init=False)
@@ -102,6 +104,12 @@ class RoboticHand:
         if self.beta_gain <= 0:
             raise ValueError("beta_gain must be positive for memory dynamics")
 
+        if self.memory_mode not in {"exponential", "recursive_planck"}:
+            raise ValueError("memory_mode must be 'exponential' or 'recursive_planck'")
+
+        if self.memory_mode == "recursive_planck" and not (0 < self.rpo_alpha * self.dt < 1):
+            raise ValueError("rpo_alpha must satisfy 0 < rpo_alpha * dt < 1 for stability")
+
         self.states = [
             [JointState() for _ in range(self.n_joints_per_finger)] for _ in range(self.n_fingers)
         ]
@@ -109,10 +117,18 @@ class RoboticHand:
         for _finger in range(self.n_fingers):
             finger_ctrls: List[HandJointController] = []
             for _ in range(self.n_joints_per_finger):
+                if self.memory_mode == "exponential":
+                    kernel = ExponentialMemoryKernel(lam=LAMBDA_DEFAULT, gain=self.beta_gain)
+                else:
+                    kernel = RecursivePlanckMemoryKernel(
+                        alpha=self.rpo_alpha,
+                        lam=LAMBDA_DEFAULT,
+                        lightfoot=self.alpha_base,
+                    )
                 finger_ctrls.append(
                     HandJointController(
                         limits=self.joint_limits,
-                        mem_kernel=ExponentialMemoryKernel(lam=LAMBDA_DEFAULT, gain=self.beta_gain),
+                        mem_kernel=kernel,
                         alpha_base=self.alpha_base,
                     )
                 )

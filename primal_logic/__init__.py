@@ -7,6 +7,7 @@ control field driving a robotic hand model with tendon-like joints.
 from .constants import VERSION
 from .demo import run_demo
 from .analysis import plot_rolling_average
+from .rpo import RecursivePlanckOperator
 from .sweeps import alpha_sweep, beta_sweep, tau_sweep, torque_sweep
 
 __all__ = [
@@ -17,4 +18,5 @@ __all__ = [
     "alpha_sweep",
     "beta_sweep",
     "tau_sweep",
+    "RecursivePlanckOperator",
 ]
