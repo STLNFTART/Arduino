@@ -16,6 +16,10 @@ leverage real Pandas/Matplotlib or bundled offline fallbacks for air-gapped envi
   hardware-facing development.
 - Recursive Planck operator utilities that expose Donte and Lightfoot constants for advanced
   memory dynamics research.
+- **NEW**: Multi-heart physiological model with heart-brain-immune coupling via Recursive Planck
+  Operators.
+- **NEW**: Arduino hardware integration for streaming cardiac signals to embedded systems via
+  serial communication.
 
 ## Repository Layout
 
@@ -70,7 +74,16 @@ artifacts so the workflow remains reproducible.
    python3 demos/demo_rrt_rif.py
    ```
 
-5. **Motor Hand Pro bridge** – fetch the hardware integration submodule:
+5. **Heart-Arduino integration demo** – simulate the multi-heart model with optional Arduino output:
+   ```bash
+   # Simulation only (no hardware)
+   python3 demos/demo_heart_arduino.py --duration 10.0
+
+   # With Arduino connected (requires pyserial)
+   python3 demos/demo_heart_arduino.py --arduino /dev/ttyACM0 --duration 10.0
+   ```
+
+6. **Motor Hand Pro bridge** – fetch the hardware integration submodule:
    ```bash
    git submodule update --init --recursive
    ```
@@ -100,3 +113,28 @@ inspection and benchmarking of tendon loads.
 The Lightfoot/Donte constants and the recursive Planck operator are described in detail in
 `docs/quantitative_framework.md`. The summary derives the discrete update used by the
 `RecursivePlanckOperator` implementation and lists the stability bounds enforced in code.
+
+## Multi-Heart Model & Arduino Integration
+
+The repository now includes a physiological heart-brain coupling model that leverages the
+Recursive Planck Operator for bounded, resonant feedback. Key components:
+
+- **`primal_logic/heart_model.py`**: Implements heart-brain-immune coupling equations with dual
+  RPO instances for cardiac and neural signals.
+- **`primal_logic/heart_arduino_bridge.py`**: Provides serial communication bridge to stream
+  cardiac output to Arduino hardware at configurable rates.
+- **`demos/demo_heart_arduino.py`**: Demonstration of the complete microprocessor-heart-Arduino
+  pipeline with optional hardware output.
+
+See `docs/processor_heart_arduino_integration.md` for comprehensive documentation including:
+- Architecture overview and data flow
+- Arduino hardware setup and serial protocol
+- Python API usage examples
+- Theory behind RPO in heart-brain coupling
+- Troubleshooting guide
+
+The multi-heart model outputs 4 channels suitable for Arduino processing:
+1. Normalized heart rate (0-1 range)
+2. Brain activity level (-1 to 1)
+3. Heart-brain coherence (0-1)
+4. Combined signal (average)
