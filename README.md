@@ -20,6 +20,8 @@ leverage real Pandas/Matplotlib or bundled offline fallbacks for air-gapped envi
   Operators.
 - **NEW**: Arduino hardware integration for streaming cardiac signals to embedded systems via
   serial communication.
+- **NEW**: Ligand-receptor binding subsystem with multiscale coupling for cellular-level
+  biochemical dynamics and immune feedback.
 
 ## Repository Layout
 
@@ -83,7 +85,16 @@ artifacts so the workflow remains reproducible.
    python3 demos/demo_heart_arduino.py --arduino /dev/ttyACM0 --duration 10.0
    ```
 
-6. **Motor Hand Pro bridge** – fetch the hardware integration submodule:
+6. **Ligand-receptor binding demo** – explore multiscale cellular-immune-cardiac coupling:
+   ```bash
+   # Run all three scenarios (baseline, infection, pharmacological)
+   python3 demos/demo_ligand_receptor.py --duration 30.0
+
+   # Quick test run
+   python3 demos/demo_ligand_receptor.py --duration 5.0 --output-dir artifacts/test
+   ```
+
+7. **Motor Hand Pro bridge** – fetch the hardware integration submodule:
    ```bash
    git submodule update --init --recursive
    ```
@@ -138,3 +149,33 @@ The multi-heart model outputs 4 channels suitable for Arduino processing:
 2. Brain activity level (-1 to 1)
 3. Heart-brain coherence (0-1)
 4. Combined signal (average)
+
+## Ligand-Receptor Binding Subsystem
+
+The repository now extends the physiological model to the cellular scale with ligand-receptor
+binding dynamics and immune signaling. This creates a complete multiscale hierarchy:
+
+**Cellular → Immune → Neural/Cardiac**
+
+Key components:
+
+- **`primal_logic/ligand_receptor.py`**: Implements receptor occupancy dynamics with macro-scale
+  feedback (stress hormones, cytokines).
+- **`primal_logic/immune_signaling.py`**: Models cumulative immune intensity and metabolic
+  feedback to neural/cardiac decay rates.
+- **`primal_logic/multiscale_coupling.py`**: Orchestrates bidirectional coupling across all scales.
+- **`demos/demo_ligand_receptor.py`**: Demonstrates infection-induced autonomic changes,
+  pharmacological modulation, and biofeedback therapy.
+
+See `docs/ligand_receptor_subsystem.md` for comprehensive documentation including:
+- Mathematical formulation of binding kinetics and immune dynamics
+- Architecture of multiscale coupling (cellular ↔ immune ↔ neural/cardiac)
+- Applications: infection modeling, drug testing, biofeedback therapy
+- Parameter guidelines and validation methods
+- Integration with Arduino hardware for physiological monitoring
+
+The ligand-receptor subsystem enables simulation of:
+- **Infection dynamics**: How pathogen exposure affects heart rate variability and cognition
+- **Pharmacological interventions**: Testing receptor antagonists and anti-inflammatory drugs
+- **Stress response**: Bidirectional feedback between cellular immunity and autonomic function
+- **Therapeutic strategies**: Biofeedback-assisted immune regulation

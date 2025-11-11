@@ -12,6 +12,9 @@ from .rpo import RecursivePlanckOperator
 from .sweeps import alpha_sweep, beta_sweep, tau_sweep, torque_sweep
 from .heart_model import MultiHeartModel, HeartBrainState
 from .heart_arduino_bridge import HeartArduinoBridge, ProcessorHeartArduinoLink
+from .ligand_receptor import LigandReceptor, LigandReceptorState
+from .immune_signaling import ImmuneSignaling, ImmuneState
+from .multiscale_coupling import MultiscaleCoupling, MultiscaleState
 
 __all__ = [
     "VERSION",
@@ -26,4 +29,10 @@ __all__ = [
     "HeartBrainState",
     "HeartArduinoBridge",
     "ProcessorHeartArduinoLink",
+    "LigandReceptor",
+    "LigandReceptorState",
+    "ImmuneSignaling",
+    "ImmuneState",
+    "MultiscaleCoupling",
+    "MultiscaleState",
 ]
