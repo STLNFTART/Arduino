@@ -32,7 +32,7 @@ from primal_logic.heart_arduino_bridge import (
     HeartArduinoBridge,
     ProcessorHeartArduinoLink,
 )
-from primal_logic.heart_model import MultiHeartModel
+from primal_logic.heart_model import CouplingParameters, MultiHeartModel
 
 
 def sinusoidal_cardiac_input(t: float, frequency: float = 1.0, amplitude: float = 0.5) -> float:
@@ -50,6 +50,8 @@ def run_demo(
     dt: float = DT,
     arduino_port: str | None = None,
     arduino_baud: int = 115200,
+    use_frequency_coupling: bool = False,
+    use_forcing: bool = False,
 ) -> None:
     """Run the heart-Arduino integration demo.
 
@@ -63,17 +65,38 @@ def run_demo(
         Serial port for Arduino (e.g., '/dev/ttyACM0'). None for simulation only.
     arduino_baud : int
         Baud rate for Arduino communication.
+    use_frequency_coupling : bool
+        Use frequency-dependent coupling parameters.
+    use_forcing : bool
+        Enable dual-frequency forcing (RSA + baroreflex).
     """
     print("=" * 70)
     print("Microprocessor-Heart-Arduino Integration Demo")
     print("=" * 70)
     print(f"Duration: {duration:.2f}s | Timestep: {dt*1000:.2f}ms")
 
+    # Configure coupling parameters
+    if use_frequency_coupling:
+        print("✓ Using frequency-dependent coupling (RSA + Baroreflex)")
+        coupling = CouplingParameters(
+            neural_to_cardiac_gain=0.35,  # Mid-range vagal/sympathetic blend
+            cardiac_to_neural_gain=0.25,  # Baroreflex feedback strength
+            low_freq_weight=0.7,   # Baroreflex dominates slow changes
+            high_freq_weight=0.3,  # RSA affects fast dynamics
+        )
+    else:
+        print("✓ Using default coupling parameters")
+        coupling = CouplingParameters()
+
+    if use_forcing:
+        print(f"✓ Dual-frequency forcing enabled (RSA: {coupling.omega_rsa/(2*math.pi):.3f} Hz, Baro: {coupling.omega_baro/(2*math.pi):.3f} Hz)")
+
     # Initialize Multi-Heart Model with RPO
     heart_model = MultiHeartModel(
         lambda_heart=0.115,
         lambda_brain=0.092,
-        coupling_strength=0.15,
+        coupling_strength=0.15,  # Deprecated: maintained for backward compatibility
+        coupling_params=coupling,
         rpo_alpha=0.4,
         dt=dt,
     )
@@ -120,6 +143,7 @@ def run_demo(
             cardiac_input=cardiac_input,
             brain_setpoint=brain_setpoint,
             theta=theta,
+            use_forcing=use_forcing,
         )
 
         # Print status every 0.5 seconds
@@ -188,6 +212,16 @@ def main() -> None:
         default=115200,
         help="Arduino baud rate (default: 115200)",
     )
+    parser.add_argument(
+        "--frequency-coupling",
+        action="store_true",
+        help="Enable frequency-dependent coupling (RSA + baroreflex)",
+    )
+    parser.add_argument(
+        "--forcing",
+        action="store_true",
+        help="Enable dual-frequency forcing term in cardiac dynamics",
+    )
 
     args = parser.parse_args()
 
@@ -196,6 +230,8 @@ def main() -> None:
         dt=args.dt,
         arduino_port=args.arduino,
         arduino_baud=args.baud,
+        use_frequency_coupling=args.frequency_coupling,
+        use_forcing=args.forcing,
     )
 
 

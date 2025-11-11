@@ -117,6 +117,7 @@ class ProcessorHeartArduinoLink:
         cardiac_input: float,
         brain_setpoint: float,
         theta: float = 1.0,
+        use_forcing: bool = False,
     ) -> None:
         """Update the system and optionally send to Arduino.
 
@@ -128,12 +129,15 @@ class ProcessorHeartArduinoLink:
             Brain control setpoint s_set(t).
         theta : float
             Command envelope Θ for RPO operators.
+        use_forcing : bool
+            Enable dual-frequency forcing (RSA + baroreflex).
         """
         # Step the heart-brain model (includes RPO processing)
         self.heart_model.step(
             cardiac_input=cardiac_input,
             brain_setpoint=brain_setpoint,
             theta=theta,
+            use_forcing=use_forcing,
         )
 
         # Send to Arduino if interval reached
