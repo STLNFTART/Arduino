@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "primal-logic-hand"
+version = "1.0.0"
+description = "Primal Logic robotic hand control framework (Python port)"
+authors = [{name = "Donte Lightfoot", email = "donte@example.com"}]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+analysis = ["pandas>=1.5", "matplotlib>=3.6"]
+dev = ["pytest>=7.0", "mypy>=1.8"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["primal_logic", "vendor"]
