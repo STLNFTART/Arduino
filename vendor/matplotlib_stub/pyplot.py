@@ -1,9 +1,4 @@
-"""Minimal pyplot replacement writing textual plot summaries.
-
-The goal is to keep unit tests deterministic without requiring the real
-matplotlib dependency. The saved files contain metadata about plotted
-series so downstream tools can parse them if desired.
-"""
+"""Minimal pyplot replacement writing textual plot summaries."""
 
 from __future__ import annotations
 
@@ -30,11 +25,23 @@ class Axes:
     grid_style: Tuple[str, float] = ("--", 0.3)
     series: List[SeriesRecord] = field(default_factory=list)
 
-    def plot(self, x: Iterable[float], y: Iterable[float], label: str = "", alpha: float = 1.0, linewidth: float = 1.0):
-        self.series.append(
-            SeriesRecord(list(float(v) for v in x), list(float(v) for v in y), label, float(alpha), float(linewidth))
+    def plot(
+        self,
+        x: Iterable[float],
+        y: Iterable[float],
+        label: str = "",
+        alpha: float = 1.0,
+        linewidth: float = 1.0,
+    ) -> SeriesRecord:
+        record = SeriesRecord(
+            list(float(v) for v in x),
+            list(float(v) for v in y),
+            label,
+            float(alpha),
+            float(linewidth),
         )
-        return self.series[-1]
+        self.series.append(record)
+        return record
 
     def set_xlabel(self, text: str) -> None:
         self.xlabel = text
@@ -46,7 +53,6 @@ class Axes:
         self.title = text
 
     def legend(self) -> None:  # pragma: no cover - metadata only
-        # The stub does not render, so no action needed.
         return None
 
     def grid(self, enabled: bool, linestyle: str = "--", alpha: float = 0.3) -> None:
@@ -78,7 +84,6 @@ class Figure:
                         idx, record.label, record.alpha, record.linewidth, len(record.x)
                     )
                 )
-                # Store a small sample for downstream sanity checks.
                 preview = list(zip(record.x[:5], record.y[:5]))
                 handle.write(f"preview={preview}\n")
 

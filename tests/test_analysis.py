@@ -4,7 +4,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pandas as pd
+try:  # Prefer the real pandas library.
+    import pandas as pd
+except ModuleNotFoundError:  # pragma: no cover - fallback for offline CI
+    from vendor import pandas_stub as pd  # type: ignore
 
 from primal_logic.analysis import plot_rolling_average
 

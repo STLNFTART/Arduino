@@ -1,10 +1,4 @@
-"""Lightweight pandas replacement used for offline testing.
-
-The implementation here supports the minimal subset of pandas required by
-this repository: ``DataFrame`` construction from dictionaries, CSV I/O,
-column selection producing ``Series`` objects, and a ``rolling().mean()``
-operation.
-"""
+"""Lightweight pandas replacement used when the real library is unavailable."""
 
 from __future__ import annotations
 
@@ -34,6 +28,11 @@ class Series:
     def rolling(self, window: int, min_periods: int = 1) -> "Rolling":
         return Rolling(self._data, window, min_periods)
 
+    def mean(self) -> float:
+        if not self._data:
+            return float("nan")
+        return float(sum(self._data) / len(self._data))
+
     def __repr__(self) -> str:  # pragma: no cover - debug helper
         return f"Series({self._data!r})"
 
@@ -46,7 +45,7 @@ class Rolling:
             raise ValueError("window must be positive")
         if min_periods <= 0:
             raise ValueError("min_periods must be positive")
-        self._data = list(float(value) for value in data)
+        self._data = [float(value) for value in data]
         self._window = window
         self._min_periods = min_periods
 

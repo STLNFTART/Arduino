@@ -1,0 +1,3 @@
+[submodule "external/MotorHandPro"]
+path = external/MotorHandPro
+url = https://github.com/STLNFTART/MotorHandPro
