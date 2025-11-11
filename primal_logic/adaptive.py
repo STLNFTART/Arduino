@@ -15,11 +15,20 @@ from .constants import (
 )
 
 
-def adaptive_alpha(step: int, avg_energy: float, quantum_coherence: float) -> float:
+def adaptive_alpha(
+    step: int,
+    avg_energy: float,
+    quantum_coherence: float,
+    alpha_base: float = ALPHA_DEFAULT,
+) -> float:
     """Compute the adaptive alpha gain used in joint controllers."""
-    base = ALPHA_DEFAULT * (1.0 + SIGMA * math.sin(step * 0.001))
-    energy_scaling = ALPHA_DEFAULT * (avg_energy / (1000.0 * ENERGY_BUDGET))
-    coherence_term = ALPHA_DEFAULT * PHASE_COUPLING * quantum_coherence
+
+    if alpha_base <= 0:
+        raise ValueError("alpha_base must be positive for stable control gains")
+
+    base = alpha_base * (1.0 + SIGMA * math.sin(step * 0.001))
+    energy_scaling = alpha_base * (avg_energy / (1000.0 * ENERGY_BUDGET))
+    coherence_term = alpha_base * PHASE_COUPLING * quantum_coherence
 
     temporal_influence = 0.0
     for i, scale in enumerate(TEMPORAL_SCALES):

@@ -6,7 +6,16 @@ from dataclasses import dataclass, field
 from typing import List, Optional
 
 from .adaptive import adaptive_alpha
-from .constants import DEFAULT_FINGERS, DT, HAND_DAMPING, HAND_MASS, JOINTS_PER_FINGER, LAMBDA_DEFAULT
+from .constants import (
+    ALPHA_DEFAULT,
+    BETA_DEFAULT,
+    DEFAULT_FINGERS,
+    DT,
+    HAND_DAMPING,
+    HAND_MASS,
+    JOINTS_PER_FINGER,
+    LAMBDA_DEFAULT,
+)
 from .memory import ExponentialMemoryKernel
 from .serial_bridge import SerialHandBridge
 from .utils import safe_clip
@@ -36,6 +45,7 @@ class HandJointController:
 
     limits: JointLimits
     mem_kernel: ExponentialMemoryKernel
+    alpha_base: float = ALPHA_DEFAULT
     kp: float = 12.0
     kd: float = 0.6
     last_tau: float = 0.0
@@ -51,7 +61,12 @@ class HandJointController:
         """Compute torque using PD and adaptive memory contributions."""
 
         avg_energy = abs(state.angle) + abs(state.velocity)
-        alpha = adaptive_alpha(step, avg_energy=avg_energy, quantum_coherence=coherence)
+        alpha = adaptive_alpha(
+            step,
+            avg_energy=avg_energy,
+            quantum_coherence=coherence,
+            alpha_base=self.alpha_base,
+        )
 
         error = desired_angle - state.angle
         d_error = -state.velocity
@@ -74,12 +89,19 @@ class RoboticHand:
     joint_limits: JointLimits = field(default_factory=JointLimits)
     mass: float = HAND_MASS
     damping: float = HAND_DAMPING
+    alpha_base: float = ALPHA_DEFAULT
+    beta_gain: float = BETA_DEFAULT
     bridge: Optional[SerialHandBridge] = None
 
     states: List[List[JointState]] = field(init=False)
     controllers: List[List[HandJointController]] = field(init=False)
 
     def __post_init__(self) -> None:
+        if self.alpha_base <= 0:
+            raise ValueError("alpha_base must be positive for controller stability")
+        if self.beta_gain <= 0:
+            raise ValueError("beta_gain must be positive for memory dynamics")
+
         self.states = [
             [JointState() for _ in range(self.n_joints_per_finger)] for _ in range(self.n_fingers)
         ]
@@ -90,7 +112,8 @@ class RoboticHand:
                 finger_ctrls.append(
                     HandJointController(
                         limits=self.joint_limits,
-                        mem_kernel=ExponentialMemoryKernel(lam=LAMBDA_DEFAULT, gain=0.8),
+                        mem_kernel=ExponentialMemoryKernel(lam=LAMBDA_DEFAULT, gain=self.beta_gain),
+                        alpha_base=self.alpha_base,
                     )
                 )
             self.controllers.append(finger_ctrls)

@@ -11,6 +11,7 @@ VERSION: str = "v1.0.0"
 DT: float = 1e-3  # [s] integration step
 
 # === Core parameters ===
+BETA_DEFAULT: float = 0.8  # dimensionless memory kernel gain
 ALPHA_DEFAULT: float = 0.54
 LAMBDA_DEFAULT: float = 0.115
 K_PERF: float = 1.47

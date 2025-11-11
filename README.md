@@ -9,7 +9,7 @@ leverage real Pandas/Matplotlib or bundled offline fallbacks for air-gapped envi
 
 - Multi-finger hand model actuated by adaptive PD controllers with exponential memory kernels.
 - Quantum-inspired field module that modulates controller gains based on coherence estimates.
-- Vector sweep tooling to benchmark controller responses across theta values.
+- Vector sweep tooling to benchmark controller responses across theta, alpha, beta, and τ limits.
 - Rolling-average analytics and plotting powered by Pandas/Matplotlib (with optional stubs when
   the real libraries are unavailable).
 - Git submodule linkage to [`MotorHandPro`](https://github.com/STLNFTART/MotorHandPro) for
@@ -53,9 +53,12 @@ artifacts so the workflow remains reproducible.
    python3 -c "from pathlib import Path; from primal_logic import plot_rolling_average; plot_rolling_average(Path('artifacts/torques.csv'), column='joint_0', window=25)"
    ```
 
-3. **Vector sweep** – explore mean torques for several theta values and write a CSV summary:
+3. **Vector sweeps** – explore controller sensitivities across the key parameters:
    ```bash
-   python3 -c "from pathlib import Path; from primal_logic.sweeps import torque_sweep; torque_sweep([0.4, 0.8, 1.2], steps=50, output_path=Path('artifacts/theta_sweep.csv'))"
+   python3 -c "from pathlib import Path; from primal_logic import torque_sweep; torque_sweep([0.4, 0.8, 1.2], steps=50, output_path=Path('artifacts/theta_sweep.csv'))"
+   python3 -c "from pathlib import Path; from primal_logic import alpha_sweep; alpha_sweep([0.50, 0.54, 0.58], steps=50, output_path=Path('artifacts/alpha_sweep.csv'))"
+   python3 -c "from pathlib import Path; from primal_logic import beta_sweep; beta_sweep([0.4, 0.8, 1.2], steps=50, output_path=Path('artifacts/beta_sweep.csv'))"
+   python3 -c "from pathlib import Path; from primal_logic import tau_sweep; tau_sweep([0.5, 0.7, 0.9], steps=50, output_path=Path('artifacts/tau_sweep.csv'))"
    ```
 
 4. **Motor Hand Pro bridge** – fetch the hardware integration submodule:
