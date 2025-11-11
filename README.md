@@ -16,10 +16,12 @@ leverage real Pandas/Matplotlib or bundled offline fallbacks for air-gapped envi
   hardware-facing development.
 - Recursive Planck operator utilities that expose Donte and Lightfoot constants for advanced
   memory dynamics research.
-- **NEW**: Multi-heart physiological model with heart-brain-immune coupling via Recursive Planck
-  Operators.
-- **NEW**: Arduino hardware integration for streaming cardiac signals to embedded systems via
-  serial communication.
+- **Multi-heart physiological model** with heart-brain-immune coupling via Recursive Planck
+  Operators (RPO-based approach).
+- **NEW: Refined heart-brain coupling model** with Van der Pol cardiac oscillator and
+  FitzHugh-Nagumo neural dynamics for physiologically realistic HRV patterns.
+- **Arduino hardware integration** for streaming cardiac signals to embedded systems via
+  serial communication (works with both models).
 
 ## Repository Layout
 
@@ -74,7 +76,7 @@ artifacts so the workflow remains reproducible.
    python3 demos/demo_rrt_rif.py
    ```
 
-5. **Heart-Arduino integration demo** – simulate the multi-heart model with optional Arduino output:
+5. **Heart-Arduino integration demo** – simulate the RPO-based multi-heart model with optional Arduino output:
    ```bash
    # Simulation only (no hardware)
    python3 demos/demo_heart_arduino.py --duration 10.0
@@ -83,7 +85,16 @@ artifacts so the workflow remains reproducible.
    python3 demos/demo_heart_arduino.py --arduino /dev/ttyACM0 --duration 10.0
    ```
 
-6. **Motor Hand Pro bridge** – fetch the hardware integration submodule:
+6. **Refined heart-brain model demo** – simulate the Van der Pol/FitzHugh-Nagumo model with Arduino output:
+   ```bash
+   # Simulation only (no hardware) - 60 seconds to see slow entrainment
+   python3 demos/demo_refined_heart_arduino.py --duration 60.0
+
+   # With Arduino connected
+   python3 demos/demo_refined_heart_arduino.py --arduino /dev/ttyACM0 --duration 60.0
+   ```
+
+7. **Motor Hand Pro bridge** – fetch the hardware integration submodule:
    ```bash
    git submodule update --init --recursive
    ```
@@ -138,3 +149,76 @@ The multi-heart model outputs 4 channels suitable for Arduino processing:
 2. Brain activity level (-1 to 1)
 3. Heart-brain coherence (0-1)
 4. Combined signal (average)
+
+## Refined Heart-Brain Coupling Model
+
+The repository now includes an alternative physiologically realistic heart-brain model using
+established computational neuroscience approaches:
+
+- **`primal_logic/refined_heart_brain.py`**: Van der Pol cardiac oscillator coupled with
+  FitzHugh-Nagumo neural dynamics.
+- **`demos/demo_refined_heart_arduino.py`**: Demonstration showing refined model with Arduino
+  integration.
+
+### Key Features
+
+1. **Van der Pol Cardiac Oscillator**
+   - Dual-frequency drive: Respiratory Sinus Arrhythmia (RSA) at ~0.1 Hz
+   - Baroreflex oscillations at ~0.04 Hz
+   - Physiological noise for realistic variability
+
+2. **FitzHugh-Nagumo Neural Model**
+   - Three-variable system: activation (v), recovery (w), adaptation (z)
+   - Slow adaptation timescale (~50 seconds) for long-term entrainment
+   - Captures neural excitability and refractoriness
+
+3. **Bidirectional Coupling**
+   - Frequency-dependent vagal/sympathetic modulation (neural→cardiac)
+   - Baroreflex feedback (cardiac→neural)
+   - Physiologically realistic transmission delays
+
+### Choosing Between Models
+
+**RPO-Based Model** (`MultiHeartModel`):
+- Quantum-inspired resonant feedback
+- Bounded by Lightfoot/Donte constants
+- Fast computation with analytical stability guarantees
+- Ideal for: Real-time control, robotic applications, theoretical research
+
+**Refined Model** (`RefinedHeartBrainCouplingModel`):
+- Established physiological oscillator models
+- Realistic HRV frequency components (RSA + baroreflex)
+- Slow neural entrainment dynamics
+- Ideal for: Biofeedback systems, HRV analysis, physiological simulation
+
+Both models:
+- Output compatible 4-channel signals for Arduino
+- Use only Python standard library (math, random)
+- Support real-time hardware streaming via `HeartArduinoBridge`
+- Provide normalized outputs suitable for PWM control
+
+### Example Usage
+
+```python
+from primal_logic import RefinedHeartBrainCouplingModel, HeartArduinoBridge
+
+# Initialize refined model
+model = RefinedHeartBrainCouplingModel(dt=0.001)
+
+# Optional: Connect to Arduino
+bridge = HeartArduinoBridge(port="/dev/ttyACM0")
+
+# Simulation loop
+for _ in range(10000):
+    model.step()
+
+    # Get outputs
+    cardiac_output = model.get_cardiac_output()  # [HR, BA, coherence, combined]
+
+    # Send to Arduino every 10 steps
+    if model.step_count % 10 == 0:
+        bridge.send_raw_values(cardiac_output)
+```
+
+See `demos/demo_refined_heart_arduino.py` for complete examples with parameter sweeps and
+physiological analysis.
