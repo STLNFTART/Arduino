@@ -1,121 +1,80 @@
-# Primal Logic Robotic Hand (Python Port)
+# PRIMAL LOGIC Framework v1.0.0
 
-This repository hosts a modular Python implementation of the Primal Logic robotic hand control
-framework. It models a quantum-inspired control field, tendon-driven robotic hand, and analysis
-utilities for torque data. The simulator runs on the Python standard library, while analytics can
-leverage real Pandas/Matplotlib or bundled offline fallbacks for air-gapped environments.
+Quantum-inspired multi-algorithm control system implemented in DLang with Motor Hand Pro integration.
 
-## Features
+## Overview
 
-- Multi-finger hand model actuated by adaptive PD controllers with exponential memory kernels.
-- Quantum-inspired field module that modulates controller gains based on coherence estimates.
-- Vector sweep tooling to benchmark controller responses across θ, α, β, and τ limits.
-- Rolling-average analytics and plotting powered by Pandas/Matplotlib (with optional stubs when
-  the real libraries are unavailable).
-- Git submodule linkage to [`MotorHandPro`](https://github.com/STLNFTART/MotorHandPro) for
-  hardware-facing development.
-- Recursive Planck operator utilities that expose Donte and Lightfoot constants for advanced
-  memory dynamics research.
+This repository converts the PRIMAL LOGIC LaTeX specification into a production-grade D (Dlang) code base. The framework models:
 
-## Repository Layout
+- Quantum-inspired field evolution and superposition dynamics.
+- Plasma field coupling and energy budgeting.
+- Temporal coherence assessment across multi-scale signals.
+- Adaptive control logic tuned for rapid response (50 μs design target, simulated here at 1 ms).
+- Cryogenic revival simulation demonstrating organ-specific tolerances.
+- High-level Motor Hand Pro interface that logs deterministic JSON command packets for hardware execution or dry-run testing.
 
-- `primal_logic/` – Core simulation modules (field, hand, trajectory, sweeps, analysis helpers).
-- `tests/` – Pytest suite covering the controller, sweeps, and plotting utilities.
-- `vendor/` – Lightweight fallbacks for Pandas/Matplotlib used when the real libraries are missing.
-- `external/` – Integration hooks and submodules such as `MotorHandPro`.
-   codex/fix-bugs-flagged-during-codex-review
-- `tools/` – Command-line utilities (e.g., `repo_inventory.py`).
-=======
-    codex/convert-latex-document-to-dlang-codebase
-- `main.py` – CLI demo that runs a grasp trajectory and optionally logs torques to disk.
+The code emphasizes clarity, reproducibility, and IP traceability via explicit parameter definitions and inline documentation.
 
-## Dependencies
+## Project Layout
 
-The simulator itself depends only on the Python 3.10+ standard library. For richer analytics,
-install the optional extras:
-
-```bash
-python3 -m pip install "pandas>=1.5" "matplotlib>=3.6"
+```
+./dub.json                      # DUB configuration
+./source/app.d                  # CLI entry point orchestrating simulations & hardware commands
+./source/primal/config.d        # Canonical parameter definitions and time-scale helpers
+./source/primal/quantum.d       # Quantum state integration and superposition tools
+./source/primal/plasma.d        # Plasma field diffusion and energy metrics
+./source/primal/coherence.d     # Temporal coherence utilities
+./source/primal/control.d       # Adaptive alpha controller and exponential memory
+./source/primal/hardware/       # Motor Hand Pro client implementation
+./source/primal/simulation/     # Cryogenic revival simulator
 ```
 
-The `pyproject.toml` also defines the `analysis` extra for packaging workflows:
+## Build & Run
 
-```bash
-python3 -m pip install .[analysis]
-```
-
-If external dependencies cannot be installed, the bundled fallbacks provide deterministic text
-artifacts so the workflow remains reproducible.
-
-## Run Instructions
-
-1. **Demo simulation** – generates a torque log in `artifacts/torques.csv`:
+1. **Build prerequisites**: DMD or LDC compiler with DUB (tested with DMD v2.105+).
+2. **Build the executable**:
    ```bash
-   python3 main.py
+   dub build
+   ```
+3. **Run the simulation** (dry-run hardware logging by default):
+   ```bash
+   ./bin/primal_logic --steps 200 --grid 8 --output-dir ./output/motor_hand_logs
+   ```
+4. **Enable live hardware writes** (set `--hardware` to forward commands instead of dry run):
+   ```bash
+   ./bin/primal_logic --hardware --output-dir /var/opt/motor_hand
    ```
 
-2. **Rolling-average analysis** – computes a rolling mean for `joint_0` and emits a plot artifact:
-   ```bash
-   python3 -c "from pathlib import Path; from primal_logic import plot_rolling_average; plot_rolling_average(Path('artifacts/torques.csv'), column='joint_0', window=25)"
-   ```
-
-3. **Vector sweeps** – explore controller sensitivities across the key parameters:
-   ```bash
-   python3 -c "from pathlib import Path; from primal_logic import torque_sweep; torque_sweep([0.4, 0.8, 1.2], steps=50, output_path=Path('artifacts/theta_sweep.csv'))"
-   python3 -c "from pathlib import Path; from primal_logic import alpha_sweep; alpha_sweep([0.50, 0.54, 0.58], steps=50, output_path=Path('artifacts/alpha_sweep.csv'))"
-   python3 -c "from pathlib import Path; from primal_logic import beta_sweep; beta_sweep([0.4, 0.8, 1.2], steps=50, output_path=Path('artifacts/beta_sweep.csv'))"
-   python3 -c "from pathlib import Path; from primal_logic import tau_sweep; tau_sweep([0.5, 0.7, 0.9], steps=50, output_path=Path('artifacts/tau_sweep.csv'))"
-   ```
-
-4. **Recursive Planck demo suite** – explore the Donte/Lightfoot formalism:
-   ```bash
-   python3 demos/demo_primal.py
-   python3 demos/demo_cryo.py
-   python3 demos/demo_rrt_rif.py
-   ```
-   codex/fix-bugs-flagged-during-codex-review
-
-5. **Repository inventory dataset** – generate CSV/Markdown summaries for reporting:
-   ```bash
-   python3 tools/repo_inventory.py
-   ```
-   The generator now walks the entire tree recursively so nested files and
-   directories are captured in the exported tables, ensuring downstream reports
-   always reflect the latest changes. The output now begins with a leading `./`
-   summary row that aggregates the total file count and byte size for a quick
-   top-level sanity check.
-
-6. **Motor Hand Pro bridge** – fetch the hardware integration submodule:
-=======
-
-5. **Motor Hand Pro bridge** – fetch the hardware integration submodule:
-  codex/convert-latex-document-to-dlang-codebase
-   ```bash
-   git submodule update --init --recursive
-   ```
+Each run emits:
+- `simulation_log.csv` capturing per-step alpha, plasma energy, vitality, and collapse probability.
+- JSON command payloads for Motor Hand Pro saved in the output directory.
 
 ## Testing
 
-Basic unit tests and vector sweep regression checks live in `tests/`. Execute them with:
-
+Execute unit tests for every module:
 ```bash
-python3 -m pytest
+dub test
 ```
 
-For an additional syntax check run:
+## Data Inspection & Visualization
+
+A minimal Python helper script (`scripts/plot_results.py`) is provided to compute rolling averages and visualize the vitality trajectory for validation.
 
 ```bash
-python3 -m compileall primal_logic tests main.py vendor
+python3 scripts/plot_results.py --csv output/motor_hand_logs/simulation_log.csv --column vitality --window 10
 ```
 
-## Plot Interpretation
+The script uses pandas to calculate rolling means and matplotlib for plotting; install dependencies via:
+```bash
+python3 -m pip install pandas matplotlib
+```
 
-Generated plot files are text-based when the stubs are active and PNG images when real
-Matplotlib is installed. Each artifact records raw torques and rolling means to support offline
-inspection and benchmarking of tendon loads.
+## Safety & Validation
 
-## Quantitative Framework Notes
+- Commands enforce grip force bounds (0–120 N) and preserve per-step energy budgets.
+- Cryogenic simulation clamps vitality between 0 and 1 while maintaining minimum temperatures ≥ 250 K.
+- Hardware interface defaults to dry-run logging, preventing accidental live deployment unless `--hardware` is specified.
 
-The Lightfoot/Donte constants and the recursive Planck operator are described in detail in
-`docs/quantitative_framework.md`. The summary derives the discrete update used by the
-`RecursivePlanckOperator` implementation and lists the stability bounds enforced in code.
+## IP Notice
+
+All algorithms and control strategies remain proprietary to Donte Lightfoot with first-inventor filing priority. Redistribution or disclosure requires explicit authorization.
