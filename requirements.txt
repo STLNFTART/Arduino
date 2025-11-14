@@ -1,4 +1,0 @@
-# Core simulation relies on the Python standard library only.
-# Install these optional dependencies for richer analytics and plotting.
-pandas>=1.5
-matplotlib>=3.6

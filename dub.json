@@ -1,0 +1,17 @@
+{
+    "name": "primal-logic-framework",
+    "description": "PRIMAL LOGIC quantum-inspired control framework with Motor Hand Pro integration",
+    "authors": ["Donte Lightfoot"],
+    "license": "proprietary",
+    "copyright": "2025 Donte Lightfoot",
+    "targetType": "executable",
+    "targetPath": "bin",
+    "targetName": "primal_logic",
+    "configurations": [
+        {
+            "name": "application",
+            "targetType": "executable"
+        }
+    ],
+    "versions": ["PrimalLogicV1_0_0"]
+}
