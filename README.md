@@ -20,6 +20,8 @@ leverage real Pandas/Matplotlib or bundled offline fallbacks for air-gapped envi
   Operators.
 - **NEW**: Arduino hardware integration for streaming cardiac signals to embedded systems via
   serial communication.
+- **NEW**: MotorHandPro hardware integration - complete bridge connecting primal_logic framework
+  to MotorHandPro robotic hand actuators with unified Primal Logic control law.
 
 ## Repository Layout
 
@@ -88,6 +90,21 @@ artifacts so the workflow remains reproducible.
    git submodule update --init --recursive
    ```
 
+7. **MotorHandPro integration demo** – complete pipeline from simulation to hardware:
+   ```bash
+   # Basic hardware connection test
+   python3 demos/demo_motorhand_integration.py --basic --port /dev/ttyACM0
+
+   # Hand simulation with hardware control
+   python3 demos/demo_motorhand_integration.py --hand --duration 10.0
+
+   # Full integration (hand + heart + RPO + hardware)
+   python3 demos/demo_motorhand_integration.py --full --duration 10.0
+
+   # Simulation mode (no hardware required)
+   python3 demos/demo_motorhand_integration.py --full --simulate --duration 5.0
+   ```
+
 ## Testing
 
 Basic unit tests and vector sweep regression checks live in `tests/`. Execute them with:
@@ -101,6 +118,35 @@ For an additional syntax check run:
 ```bash
 python3 -m compileall primal_logic tests main.py vendor
 ```
+
+### MotorHandPro Validation Pipeline
+
+The Arduino robotic hand framework is integrated into the MotorHandPro validation pipeline,
+which tests the Primal Logic control law against multiple real-world repositories:
+
+```bash
+# Run complete validation suite (requires numpy)
+python3 run_motorhand_validation.py
+
+# Run only Arduino robotic hand test
+python3 run_motorhand_validation.py --arduino-only
+
+# Export results and generate LaTeX report
+python3 run_motorhand_validation.py --export results.json --latex report.tex
+```
+
+**Validation tests**:
+- **SpaceX**: Rocket landing control
+- **Tesla**: Multi-actuator synchronization and motor control
+- **Firestorm/PX4**: Drone stabilization
+- **CARLA**: Autonomous vehicle control
+- **Arduino**: 15-DOF robotic hand grasp control with tendon dynamics
+
+All tests verify:
+- Lipschitz contractivity (L < 1)
+- Bounded control energy
+- Finite-time convergence
+- System-specific performance metrics
 
 ## Plot Interpretation
 
@@ -138,3 +184,66 @@ The multi-heart model outputs 4 channels suitable for Arduino processing:
 2. Brain activity level (-1 to 1)
 3. Heart-brain coherence (0-1)
 4. Combined signal (average)
+
+## MotorHandPro Hardware Integration
+
+The repository now provides complete integration with the MotorHandPro robotic hand hardware
+control system. This creates a unified pipeline from high-level grasp planning to real-time
+actuator control using consistent Primal Logic principles across both simulation and hardware.
+
+**Key components**:
+
+- **`primal_logic/motorhand_integration.py`**: Bridge classes connecting the hand model to
+  MotorHandPro hardware via serial communication (115200 baud).
+- **`MotorHandProBridge`**: Handles low-level serial communication, exponential memory weighting
+  of torque commands, control energy tracking, and Lipschitz stability monitoring.
+- **`UnifiedPrimalLogicController`**: High-level orchestrator integrating hand simulation, RPO
+  microprocessor, heart-brain coupling, and hardware actuation in a single control loop.
+- **`demos/demo_motorhand_integration.py`**: Complete demonstration suite with basic connection
+  test, hand simulation, and full integration modes.
+
+**Control Pipeline**:
+```
+Trajectory → Hand Model → RPO Processor → Heart Model → MotorHandPro Hardware
+```
+
+**Unified Primal Logic Framework**:
+- Control Law: `dψ/dt = -λ·ψ(t) + KE·e(t)`
+- Donte Constant (D): 149.9992314000 (fixed-point attractor)
+- Lightfoot Constant (λ): 0.16905 s⁻¹ (exponential decay rate)
+- Control Energy: `Ec(t) = ∫₀^t ψ(τ)·γ(τ) dτ` (Lyapunov-like stability metric)
+- Stability Guarantee: Lipschitz constant < 1 ensures bounded convergence
+
+**Hardware Requirements**:
+- Arduino Uno/Mega or compatible (ATmega328P/2560)
+- 15 servo actuators (5 fingers × 3 joints, max 0.7 N·m per joint)
+- USB connection (typically /dev/ttyACM0 on Linux)
+- MotorHandPro firmware (see `external/MotorHandPro/MotorHandPro.ino`)
+- Optional: WebSocket control panel for real-time monitoring
+
+See `docs/motorhand_pro_integration.md` for comprehensive documentation including:
+- Complete architecture and control pipeline
+- Hardware setup and wiring diagrams
+- Software installation and configuration
+- Usage examples and API reference
+- Demo script documentation
+- WebSocket control panel integration
+- Performance specifications and troubleshooting
+
+**Quick Start**:
+```bash
+# Initialize MotorHandPro submodule
+git submodule update --init --recursive
+
+# Upload Arduino firmware
+# Open external/MotorHandPro/MotorHandPro.ino in Arduino IDE and upload
+
+# Install Python dependencies (including pyserial)
+pip install -r requirements.txt
+
+# Run basic hardware test
+python demos/demo_motorhand_integration.py --basic --port /dev/ttyACM0
+
+# Run full integration with all features
+python demos/demo_motorhand_integration.py --full --duration 10.0
+```
