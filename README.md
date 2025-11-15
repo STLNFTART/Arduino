@@ -119,6 +119,35 @@ For an additional syntax check run:
 python3 -m compileall primal_logic tests main.py vendor
 ```
 
+### MotorHandPro Validation Pipeline
+
+The Arduino robotic hand framework is integrated into the MotorHandPro validation pipeline,
+which tests the Primal Logic control law against multiple real-world repositories:
+
+```bash
+# Run complete validation suite (requires numpy)
+python3 run_motorhand_validation.py
+
+# Run only Arduino robotic hand test
+python3 run_motorhand_validation.py --arduino-only
+
+# Export results and generate LaTeX report
+python3 run_motorhand_validation.py --export results.json --latex report.tex
+```
+
+**Validation tests**:
+- **SpaceX**: Rocket landing control
+- **Tesla**: Multi-actuator synchronization and motor control
+- **Firestorm/PX4**: Drone stabilization
+- **CARLA**: Autonomous vehicle control
+- **Arduino**: 15-DOF robotic hand grasp control with tendon dynamics
+
+All tests verify:
+- Lipschitz contractivity (L < 1)
+- Bounded control energy
+- Finite-time convergence
+- System-specific performance metrics
+
 ## Plot Interpretation
 
 Generated plot files are text-based when the stubs are active and PNG images when real
