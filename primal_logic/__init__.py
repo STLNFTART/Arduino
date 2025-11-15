@@ -13,11 +13,21 @@ from .rpo import RecursivePlanckOperator
 from .sweeps import alpha_sweep, beta_sweep, tau_sweep, torque_sweep
 from .heart_model import MultiHeartModel, HeartBrainState
 from .heart_arduino_bridge import HeartArduinoBridge, ProcessorHeartArduinoLink
-from .motorhand_integration import (
-    MotorHandProBridge,
-    UnifiedPrimalLogicController,
-    create_integrated_system,
-)
+
+# Optional: MotorHandPro integration (requires numpy)
+try:
+    from .motorhand_integration import (
+        MotorHandProBridge,
+        UnifiedPrimalLogicController,
+        create_integrated_system,
+    )
+    _MOTORHAND_AVAILABLE = True
+except ImportError:
+    _MOTORHAND_AVAILABLE = False
+    # Create placeholder None values
+    MotorHandProBridge = None
+    UnifiedPrimalLogicController = None
+    create_integrated_system = None
 
 __all__ = [
     "VERSION",
