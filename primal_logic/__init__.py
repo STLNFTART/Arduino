@@ -14,6 +14,35 @@ from .sweeps import alpha_sweep, beta_sweep, tau_sweep, torque_sweep
 from .heart_model import MultiHeartModel, HeartBrainState
 from .heart_arduino_bridge import HeartArduinoBridge, ProcessorHeartArduinoLink
 
+# Kernel v4: Quantum-Cardiac Integration (requires numpy)
+try:
+    from .cardiac_tissue_models import CardiacModelType, CardiacTissueModel
+    from .quantum_plasma_field import QuantumAmplitudeState, PlasmaField
+    from .primal_algorithms import (
+        AlgorithmType,
+        AlgorithmMetrics,
+        PrimalAlgorithmSuite,
+    )
+    from .kernel_v4 import (
+        KernelV4Parameters,
+        PrimalLogicKernelV4,
+        create_kernel_v4,
+    )
+    _KERNEL_V4_AVAILABLE = True
+except ImportError:
+    _KERNEL_V4_AVAILABLE = False
+    # Create placeholder None values
+    CardiacModelType = None
+    CardiacTissueModel = None
+    QuantumAmplitudeState = None
+    PlasmaField = None
+    AlgorithmType = None
+    AlgorithmMetrics = None
+    PrimalAlgorithmSuite = None
+    KernelV4Parameters = None
+    PrimalLogicKernelV4 = None
+    create_kernel_v4 = None
+
 # Optional: MotorHandPro integration (requires numpy)
 try:
     from .motorhand_integration import (
@@ -45,4 +74,15 @@ __all__ = [
     "MotorHandProBridge",
     "UnifiedPrimalLogicController",
     "create_integrated_system",
+    # Kernel v4 exports
+    "CardiacModelType",
+    "CardiacTissueModel",
+    "QuantumAmplitudeState",
+    "PlasmaField",
+    "AlgorithmType",
+    "AlgorithmMetrics",
+    "PrimalAlgorithmSuite",
+    "KernelV4Parameters",
+    "PrimalLogicKernelV4",
+    "create_kernel_v4",
 ]
