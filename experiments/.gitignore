@@ -1,0 +1,5 @@
+# Ignore all experiment run data
+runs/
+
+# But keep the directory structure
+!runs/.gitkeep

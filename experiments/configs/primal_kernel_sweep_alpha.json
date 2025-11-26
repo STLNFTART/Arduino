@@ -1,0 +1,14 @@
+{
+  "description": "Alpha gain parameter sweep for primal kernel hand controller",
+  "sim_name": "primal_kernel",
+  "parameters": {
+    "alpha_base": [0.3, 0.4, 0.5, 0.6, 0.7, 0.8],
+    "theta": [0.8, 1.0, 1.2],
+    "steps": [200]
+  },
+  "metrics": [
+    "mean_torque",
+    "mean_coherence",
+    "saturation_ratio"
+  ]
+}
