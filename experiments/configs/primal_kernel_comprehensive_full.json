@@ -1,0 +1,56 @@
+{
+  "description": "Comprehensive full-spectrum parameter sweep for primal kernel hand controller - ALL variable combinations",
+  "sim_name": "primal_kernel",
+  "total_configs": 600,
+  "parameters": {
+    "alpha_base": {
+      "values": [0.3, 0.45, 0.54, 0.6, 0.75],
+      "description": "Controller gain (Lightfoot nominal = 0.54)",
+      "count": 5
+    },
+    "beta_gain": {
+      "values": [0.2, 0.5, 0.8, 1.2],
+      "description": "Memory kernel gain",
+      "count": 4
+    },
+    "theta": {
+      "values": [0.6, 0.8, 1.0, 1.2, 1.5],
+      "description": "Field coupling strength",
+      "count": 5
+    },
+    "torque_max": {
+      "values": [0.5, 0.7, 0.9],
+      "description": "Joint torque limit (N·m)",
+      "count": 3
+    },
+    "memory_mode": {
+      "values": ["exponential", "recursive_planck"],
+      "description": "Memory kernel implementation",
+      "count": 2
+    },
+    "steps": {
+      "values": [200],
+      "description": "Simulation steps",
+      "count": 1
+    }
+  },
+  "metrics_computed": [
+    "mean_torque",
+    "max_torque",
+    "mean_coherence",
+    "mean_angle",
+    "max_velocity",
+    "saturation_ratio",
+    "lipschitz_estimate",
+    "stable"
+  ],
+  "execution": {
+    "run_id": "20251126_205409_comprehensive_full_sweep",
+    "elapsed_sec": 11.231,
+    "configs_per_sec": 53.42,
+    "stable_count": 0,
+    "stability_rate": "0.00%"
+  },
+  "powered_by": "Primal Tech Invest",
+  "website": "https://www.primaltechinvest.com"
+}

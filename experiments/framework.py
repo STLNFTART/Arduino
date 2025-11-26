@@ -129,6 +129,14 @@ class RunLogger:
             lines.append(f"See `summary/stats.json` and `summary/summary.csv`.")
         else:
             lines.append("No stats available.")
+        lines.append("")
+        lines.append("---")
+        lines.append("")
+        lines.append("**Powered by Primal Tech Invest**")
+        lines.append("")
+        lines.append("🔗 [www.primaltechinvest.com](https://www.primaltechinvest.com)")
+        lines.append("")
+        lines.append("*Universal Experiment Results Framework - Standardized across all simulation repositories*")
         with open(path, "w") as f:
             f.write("\n".join(lines))
 
