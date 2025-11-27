@@ -1,0 +1,1280 @@
+============================= test session starts ==============================
+platform linux -- Python 3.11.14, pytest-9.0.1, pluggy-1.6.0 -- /root/.local/share/uv/tools/pytest/bin/python
+cachedir: .pytest_cache
+rootdir: /home/user/Arduino
+configfile: pyproject.toml
+collecting ... collected 86 items
+
+tests/test_adaptive.py::test_adaptive_alpha_positive_base PASSED         [  1%]
+tests/test_adaptive.py::test_adaptive_alpha_negative_base_raises PASSED  [  2%]
+tests/test_adaptive.py::test_adaptive_alpha_bounds PASSED                [  3%]
+tests/test_adaptive.py::test_adaptive_alpha_temporal_scaling PASSED      [  4%]
+tests/test_adaptive.py::test_adaptive_alpha_energy_scaling PASSED        [  5%]
+tests/test_adaptive.py::test_adaptive_alpha_coherence_influence PASSED   [  6%]
+tests/test_analysis.py::test_plot_rolling_average PASSED                 [  8%]
+tests/test_field.py::test_field_initialization PASSED                    [  9%]
+tests/test_field.py::test_step_updates_field PASSED                      [ 10%]
+tests/test_field.py::test_coherence_bounded PASSED                       [ 11%]
+tests/test_field.py::test_field_stability PASSED                         [ 12%]
+tests/test_field.py::test_laplacian_coupling PASSED                      [ 13%]
+tests/test_field.py::test_theta_influence PASSED                         [ 15%]
+tests/test_field.py::test_custom_parameters PASSED                       [ 16%]
+tests/test_hand.py::test_hand_advances_and_clamps_angles PASSED          [ 17%]
+tests/test_hand.py::test_hand_supports_recursive_planck_memory PASSED    [ 18%]
+tests/test_hand.py::test_hand_zero_desired_angles PASSED                 [ 19%]
+tests/test_hand.py::test_hand_extreme_desired_values PASSED              [ 20%]
+tests/test_hand.py::test_hand_negative_alpha_raises PASSED               [ 22%]
+tests/test_hand.py::test_hand_negative_beta_raises PASSED                [ 23%]
+tests/test_hand.py::test_hand_invalid_memory_mode_raises PASSED          [ 24%]
+tests/test_hand.py::test_hand_get_angles_returns_copy PASSED             [ 25%]
+tests/test_hand.py::test_hand_get_torques_dimensions PASSED              [ 26%]
+tests/test_hand.py::test_hand_multistep_sequence PASSED                  [ 27%]
+tests/test_hand.py::test_hand_velocity_limits PASSED                     [ 29%]
+tests/test_hand.py::test_hand_torque_limits PASSED                       [ 30%]
+tests/test_hand.py::test_hand_different_finger_configurations PASSED     [ 31%]
+tests/test_hand.py::test_hand_rpo_alpha_stability_boundary PASSED        [ 32%]
+tests/test_heart_arduino_bridge.py::test_bridge_initialization ERROR     [ 33%]
+tests/test_heart_arduino_bridge.py::test_send_heart_signals_normalization ERROR [ 34%]
+tests/test_heart_arduino_bridge.py::test_send_raw_values ERROR           [ 36%]
+tests/test_heart_arduino_bridge.py::test_processor_link_update ERROR     [ 37%]
+tests/test_heart_arduino_bridge.py::test_send_interval_throttling ERROR  [ 38%]
+tests/test_heart_arduino_bridge.py::test_get_state ERROR                 [ 39%]
+tests/test_heart_arduino_bridge.py::test_reset ERROR                     [ 40%]
+tests/test_heart_arduino_bridge.py::test_link_without_arduino_bridge PASSED [ 41%]
+tests/test_heart_model.py::test_heart_brain_initialization PASSED        [ 43%]
+tests/test_heart_model.py::test_step_updates_state PASSED                [ 44%]
+tests/test_heart_model.py::test_rpo_alpha_validation PASSED              [ 45%]
+tests/test_heart_model.py::test_heart_brain_coupling PASSED              [ 46%]
+tests/test_heart_model.py::test_get_heart_rate_bounds PASSED             [ 47%]
+tests/test_heart_model.py::test_get_brain_activity_bounds PASSED         [ 48%]
+tests/test_heart_model.py::test_cardiac_output_channels PASSED           [ 50%]
+tests/test_heart_model.py::test_reset_clears_state PASSED                [ 51%]
+tests/test_heart_model.py::test_step_advances_counter PASSED             [ 52%]
+tests/test_heart_model.py::test_f_heart_coupling_function PASSED         [ 53%]
+tests/test_heart_model.py::test_f_brain_coupling_function PASSED         [ 54%]
+tests/test_heart_model.py::test_sensory_feedback_update PASSED           [ 55%]
+tests/test_heart_model.py::test_integration_stability PASSED             [ 56%]
+tests/test_heart_model.py::test_cardiac_output_coherence_channel PASSED  [ 58%]
+tests/test_heart_model.py::test_different_lambda_values PASSED           [ 59%]
+tests/test_memory.py::test_exponential_kernel_update PASSED              [ 60%]
+tests/test_memory.py::test_exponential_kernel_decay PASSED               [ 61%]
+tests/test_memory.py::test_exponential_kernel_state_property PASSED      [ 62%]
+tests/test_memory.py::test_memory_kernel_with_zero_error PASSED          [ 63%]
+tests/test_memory.py::test_exponential_kernel_gain_scaling PASSED        [ 65%]
+tests/test_memory.py::test_recursive_planck_kernel_requires_step_index PASSED [ 66%]
+tests/test_rpo.py::test_rpo_remains_bounded PASSED                       [ 67%]
+tests/test_rpo.py::test_recursive_planck_kernel_requires_step_index PASSED [ 68%]
+tests/test_rpo.py::test_rpo_effective_planck_constant PASSED             [ 69%]
+tests/test_sweeps.py::test_torque_sweep_generates_results PASSED         [ 70%]
+tests/test_sweeps.py::test_alpha_sweep_varies_gain PASSED                [ 72%]
+tests/test_sweeps.py::test_beta_sweep_rejects_nonpositive PASSED         [ 73%]
+tests/test_sweeps.py::test_beta_sweep_records_statistics PASSED          [ 74%]
+tests/test_sweeps.py::test_tau_sweep_enforces_positive_limit PASSED      [ 75%]
+tests/test_sweeps.py::test_tau_sweep_generates_csv PASSED                [ 76%]
+tests/test_trajectory.py::test_grasp_trajectory_shape PASSED             [ 77%]
+tests/test_trajectory.py::test_grasp_trajectory_smooth_profile PASSED    [ 79%]
+tests/test_trajectory.py::test_grasp_trajectory_bounds PASSED            [ 80%]
+tests/test_trajectory.py::test_grasp_trajectory_zero_steps PASSED        [ 81%]
+tests/test_trajectory.py::test_grasp_trajectory_monotonic PASSED         [ 82%]
+tests/test_trajectory.py::test_grasp_trajectory_uniform_across_joints PASSED [ 83%]
+tests/test_utils.py::test_safe_clip_within_bounds PASSED                 [ 84%]
+tests/test_utils.py::test_safe_clip_at_boundaries PASSED                 [ 86%]
+tests/test_utils.py::test_safe_clip_exceeds_bounds PASSED                [ 87%]
+tests/test_utils.py::test_mean_empty_sequence PASSED                     [ 88%]
+tests/test_utils.py::test_mean_values PASSED                             [ 89%]
+tests/test_utils.py::test_flatten_2d_matrix PASSED                       [ 90%]
+tests/test_utils.py::test_zeros_2d PASSED                                [ 91%]
+tests/test_utils.py::test_zeros_3d PASSED                                [ 93%]
+tests/test_utils.py::test_zeros_invalid_shape PASSED                     [ 94%]
+tests/test_utils.py::test_zeros_like PASSED                              [ 95%]
+tests/test_utils.py::test_laplacian_2d_interior PASSED                   [ 96%]
+tests/test_utils.py::test_laplacian_2d_neumann_boundaries PASSED         [ 97%]
+tests/test_utils.py::test_laplacian_2d_empty_field PASSED                [ 98%]
+tests/test_utils.py::test_write_csv_formatting PASSED                    [100%]
+
+==================================== ERRORS ====================================
+_________________ ERROR at setup of test_bridge_initialization _________________
+
+    @pytest.fixture
+    def mock_serial():
+        """Create a mock serial port."""
+        # Mock the serial module that gets imported inside SerialHandBridge.__init__
+>       with patch("serial.Serial") as mock_serial_class:
+
+
+tests/test_heart_arduino_bridge.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <unittest.mock._patch object at 0x7eabc5417810>
+
+    def __enter__(self):
+        """Perform the patch."""
+        new, spec, spec_set = self.new, self.spec, self.spec_set
+        autospec, kwargs = self.autospec, self.kwargs
+        new_callable = self.new_callable
+>       self.target = self.getter()
+                      ^^^^^^^^^^^^^
+
+autospec   = None
+kwargs     = {}
+new        = sentinel.DEFAULT
+new_callable = None
+self       = <unittest.mock._patch object at 0x7eabc5417810>
+spec       = None
+spec_set   = None
+
+/usr/lib/python3.11/unittest/mock.py:1430: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P<pkg>{dotted_words})'
+                                       f'(?P<cln>:(?P<obj>{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+>           mod = importlib.import_module(modname)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dotted_words = '(?!\\d)(\\w+)(\\.(?!\\d)(\\w+))*'
+gd         = {'cln': None, 'obj': None, 'pkg': 'serial'}
+m          = <re.Match object; span=(0, 6), match='serial'>
+modname    = 'serial'
+name       = 'serial'
+parts      = []
+re         = <module 're' from '/usr/lib/python3.11/re/__init__.py'>
+
+/usr/lib/python3.11/pkgutil.py:700: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                msg = ("the 'package' argument is required to perform a relative "
+                       "import for {!r}")
+                raise TypeError(msg.format(name))
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+level      = 0
+name       = 'serial'
+package    = None
+
+/usr/lib/python3.11/importlib/__init__.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', package = None, level = 0
+
+>   ???
+
+level      = 0
+name       = 'serial'
+package    = None
+
+<frozen importlib._bootstrap>:1204: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', import_ = <function _gcd_import at 0x7eabc6b4fd80>
+
+>   ???
+
+import_    = <function _gcd_import at 0x7eabc6b4fd80>
+module     = <object object at 0x7eabc6b84050>
+name       = 'serial'
+
+<frozen importlib._bootstrap>:1176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', import_ = <function _gcd_import at 0x7eabc6b4fd80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'serial'
+
+import_    = <function _gcd_import at 0x7eabc6b4fd80>
+name       = 'serial'
+parent     = ''
+parent_spec = None
+path       = None
+spec       = None
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+___________ ERROR at setup of test_send_heart_signals_normalization ____________
+
+    @pytest.fixture
+    def mock_serial():
+        """Create a mock serial port."""
+        # Mock the serial module that gets imported inside SerialHandBridge.__init__
+>       with patch("serial.Serial") as mock_serial_class:
+
+
+tests/test_heart_arduino_bridge.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <unittest.mock._patch object at 0x7eabc54c5890>
+
+    def __enter__(self):
+        """Perform the patch."""
+        new, spec, spec_set = self.new, self.spec, self.spec_set
+        autospec, kwargs = self.autospec, self.kwargs
+        new_callable = self.new_callable
+>       self.target = self.getter()
+                      ^^^^^^^^^^^^^
+
+autospec   = None
+kwargs     = {}
+new        = sentinel.DEFAULT
+new_callable = None
+self       = <unittest.mock._patch object at 0x7eabc54c5890>
+spec       = None
+spec_set   = None
+
+/usr/lib/python3.11/unittest/mock.py:1430: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P<pkg>{dotted_words})'
+                                       f'(?P<cln>:(?P<obj>{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+>           mod = importlib.import_module(modname)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+gd         = {'cln': None, 'obj': None, 'pkg': 'serial'}
+m          = <re.Match object; span=(0, 6), match='serial'>
+modname    = 'serial'
+name       = 'serial'
+parts      = []
+
+/usr/lib/python3.11/pkgutil.py:700: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                msg = ("the 'package' argument is required to perform a relative "
+                       "import for {!r}")
+                raise TypeError(msg.format(name))
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+level      = 0
+name       = 'serial'
+package    = None
+
+/usr/lib/python3.11/importlib/__init__.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', package = None, level = 0
+
+>   ???
+
+level      = 0
+name       = 'serial'
+package    = None
+
+<frozen importlib._bootstrap>:1204: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', import_ = <function _gcd_import at 0x7eabc6b4fd80>
+
+>   ???
+
+import_    = <function _gcd_import at 0x7eabc6b4fd80>
+module     = <object object at 0x7eabc6b84050>
+name       = 'serial'
+
+<frozen importlib._bootstrap>:1176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', import_ = <function _gcd_import at 0x7eabc6b4fd80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'serial'
+
+import_    = <function _gcd_import at 0x7eabc6b4fd80>
+name       = 'serial'
+parent     = ''
+parent_spec = None
+path       = None
+spec       = None
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+____________________ ERROR at setup of test_send_raw_values ____________________
+
+    @pytest.fixture
+    def mock_serial():
+        """Create a mock serial port."""
+        # Mock the serial module that gets imported inside SerialHandBridge.__init__
+>       with patch("serial.Serial") as mock_serial_class:
+
+
+tests/test_heart_arduino_bridge.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <unittest.mock._patch object at 0x7eabc5187fd0>
+
+    def __enter__(self):
+        """Perform the patch."""
+        new, spec, spec_set = self.new, self.spec, self.spec_set
+        autospec, kwargs = self.autospec, self.kwargs
+        new_callable = self.new_callable
+>       self.target = self.getter()
+                      ^^^^^^^^^^^^^
+
+autospec   = None
+kwargs     = {}
+new        = sentinel.DEFAULT
+new_callable = None
+self       = <unittest.mock._patch object at 0x7eabc5187fd0>
+spec       = None
+spec_set   = None
+
+/usr/lib/python3.11/unittest/mock.py:1430: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P<pkg>{dotted_words})'
+                                       f'(?P<cln>:(?P<obj>{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+>           mod = importlib.import_module(modname)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+gd         = {'cln': None, 'obj': None, 'pkg': 'serial'}
+m          = <re.Match object; span=(0, 6), match='serial'>
+modname    = 'serial'
+name       = 'serial'
+parts      = []
+
+/usr/lib/python3.11/pkgutil.py:700: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                msg = ("the 'package' argument is required to perform a relative "
+                       "import for {!r}")
+                raise TypeError(msg.format(name))
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+level      = 0
+name       = 'serial'
+package    = None
+
+/usr/lib/python3.11/importlib/__init__.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', package = None, level = 0
+
+>   ???
+
+level      = 0
+name       = 'serial'
+package    = None
+
+<frozen importlib._bootstrap>:1204: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', import_ = <function _gcd_import at 0x7eabc6b4fd80>
+
+>   ???
+
+import_    = <function _gcd_import at 0x7eabc6b4fd80>
+module     = <object object at 0x7eabc6b84050>
+name       = 'serial'
+
+<frozen importlib._bootstrap>:1176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', import_ = <function _gcd_import at 0x7eabc6b4fd80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'serial'
+
+import_    = <function _gcd_import at 0x7eabc6b4fd80>
+name       = 'serial'
+parent     = ''
+parent_spec = None
+path       = None
+spec       = None
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+_________________ ERROR at setup of test_processor_link_update _________________
+
+    @pytest.fixture
+    def mock_serial():
+        """Create a mock serial port."""
+        # Mock the serial module that gets imported inside SerialHandBridge.__init__
+>       with patch("serial.Serial") as mock_serial_class:
+
+
+tests/test_heart_arduino_bridge.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <unittest.mock._patch object at 0x7eabc50c6790>
+
+    def __enter__(self):
+        """Perform the patch."""
+        new, spec, spec_set = self.new, self.spec, self.spec_set
+        autospec, kwargs = self.autospec, self.kwargs
+        new_callable = self.new_callable
+>       self.target = self.getter()
+                      ^^^^^^^^^^^^^
+
+autospec   = None
+kwargs     = {}
+new        = sentinel.DEFAULT
+new_callable = None
+self       = <unittest.mock._patch object at 0x7eabc50c6790>
+spec       = None
+spec_set   = None
+
+/usr/lib/python3.11/unittest/mock.py:1430: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P<pkg>{dotted_words})'
+                                       f'(?P<cln>:(?P<obj>{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+>           mod = importlib.import_module(modname)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+gd         = {'cln': None, 'obj': None, 'pkg': 'serial'}
+m          = <re.Match object; span=(0, 6), match='serial'>
+modname    = 'serial'
+name       = 'serial'
+parts      = []
+
+/usr/lib/python3.11/pkgutil.py:700: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                msg = ("the 'package' argument is required to perform a relative "
+                       "import for {!r}")
+                raise TypeError(msg.format(name))
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+level      = 0
+name       = 'serial'
+package    = None
+
+/usr/lib/python3.11/importlib/__init__.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', package = None, level = 0
+
+>   ???
+
+level      = 0
+name       = 'serial'
+package    = None
+
+<frozen importlib._bootstrap>:1204: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', import_ = <function _gcd_import at 0x7eabc6b4fd80>
+
+>   ???
+
+import_    = <function _gcd_import at 0x7eabc6b4fd80>
+module     = <object object at 0x7eabc6b84050>
+name       = 'serial'
+
+<frozen importlib._bootstrap>:1176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', import_ = <function _gcd_import at 0x7eabc6b4fd80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'serial'
+
+import_    = <function _gcd_import at 0x7eabc6b4fd80>
+name       = 'serial'
+parent     = ''
+parent_spec = None
+path       = None
+spec       = None
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+_______________ ERROR at setup of test_send_interval_throttling ________________
+
+    @pytest.fixture
+    def mock_serial():
+        """Create a mock serial port."""
+        # Mock the serial module that gets imported inside SerialHandBridge.__init__
+>       with patch("serial.Serial") as mock_serial_class:
+
+
+tests/test_heart_arduino_bridge.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <unittest.mock._patch object at 0x7eabc51f5e50>
+
+    def __enter__(self):
+        """Perform the patch."""
+        new, spec, spec_set = self.new, self.spec, self.spec_set
+        autospec, kwargs = self.autospec, self.kwargs
+        new_callable = self.new_callable
+>       self.target = self.getter()
+                      ^^^^^^^^^^^^^
+
+autospec   = None
+kwargs     = {}
+new        = sentinel.DEFAULT
+new_callable = None
+self       = <unittest.mock._patch object at 0x7eabc51f5e50>
+spec       = None
+spec_set   = None
+
+/usr/lib/python3.11/unittest/mock.py:1430: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P<pkg>{dotted_words})'
+                                       f'(?P<cln>:(?P<obj>{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+>           mod = importlib.import_module(modname)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+gd         = {'cln': None, 'obj': None, 'pkg': 'serial'}
+m          = <re.Match object; span=(0, 6), match='serial'>
+modname    = 'serial'
+name       = 'serial'
+parts      = []
+
+/usr/lib/python3.11/pkgutil.py:700: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                msg = ("the 'package' argument is required to perform a relative "
+                       "import for {!r}")
+                raise TypeError(msg.format(name))
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+level      = 0
+name       = 'serial'
+package    = None
+
+/usr/lib/python3.11/importlib/__init__.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', package = None, level = 0
+
+>   ???
+
+level      = 0
+name       = 'serial'
+package    = None
+
+<frozen importlib._bootstrap>:1204: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', import_ = <function _gcd_import at 0x7eabc6b4fd80>
+
+>   ???
+
+import_    = <function _gcd_import at 0x7eabc6b4fd80>
+module     = <object object at 0x7eabc6b84050>
+name       = 'serial'
+
+<frozen importlib._bootstrap>:1176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', import_ = <function _gcd_import at 0x7eabc6b4fd80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'serial'
+
+import_    = <function _gcd_import at 0x7eabc6b4fd80>
+name       = 'serial'
+parent     = ''
+parent_spec = None
+path       = None
+spec       = None
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+_______________________ ERROR at setup of test_get_state _______________________
+
+    @pytest.fixture
+    def mock_serial():
+        """Create a mock serial port."""
+        # Mock the serial module that gets imported inside SerialHandBridge.__init__
+>       with patch("serial.Serial") as mock_serial_class:
+
+
+tests/test_heart_arduino_bridge.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <unittest.mock._patch object at 0x7eabc517d250>
+
+    def __enter__(self):
+        """Perform the patch."""
+        new, spec, spec_set = self.new, self.spec, self.spec_set
+        autospec, kwargs = self.autospec, self.kwargs
+        new_callable = self.new_callable
+>       self.target = self.getter()
+                      ^^^^^^^^^^^^^
+
+autospec   = None
+kwargs     = {}
+new        = sentinel.DEFAULT
+new_callable = None
+self       = <unittest.mock._patch object at 0x7eabc517d250>
+spec       = None
+spec_set   = None
+
+/usr/lib/python3.11/unittest/mock.py:1430: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P<pkg>{dotted_words})'
+                                       f'(?P<cln>:(?P<obj>{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+>           mod = importlib.import_module(modname)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+gd         = {'cln': None, 'obj': None, 'pkg': 'serial'}
+m          = <re.Match object; span=(0, 6), match='serial'>
+modname    = 'serial'
+name       = 'serial'
+parts      = []
+
+/usr/lib/python3.11/pkgutil.py:700: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                msg = ("the 'package' argument is required to perform a relative "
+                       "import for {!r}")
+                raise TypeError(msg.format(name))
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+level      = 0
+name       = 'serial'
+package    = None
+
+/usr/lib/python3.11/importlib/__init__.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', package = None, level = 0
+
+>   ???
+
+level      = 0
+name       = 'serial'
+package    = None
+
+<frozen importlib._bootstrap>:1204: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', import_ = <function _gcd_import at 0x7eabc6b4fd80>
+
+>   ???
+
+import_    = <function _gcd_import at 0x7eabc6b4fd80>
+module     = <object object at 0x7eabc6b84050>
+name       = 'serial'
+
+<frozen importlib._bootstrap>:1176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', import_ = <function _gcd_import at 0x7eabc6b4fd80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'serial'
+
+import_    = <function _gcd_import at 0x7eabc6b4fd80>
+name       = 'serial'
+parent     = ''
+parent_spec = None
+path       = None
+spec       = None
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+_________________________ ERROR at setup of test_reset _________________________
+
+    @pytest.fixture
+    def mock_serial():
+        """Create a mock serial port."""
+        # Mock the serial module that gets imported inside SerialHandBridge.__init__
+>       with patch("serial.Serial") as mock_serial_class:
+
+
+tests/test_heart_arduino_bridge.py:17: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <unittest.mock._patch object at 0x7eabc5247ed0>
+
+    def __enter__(self):
+        """Perform the patch."""
+        new, spec, spec_set = self.new, self.spec, self.spec_set
+        autospec, kwargs = self.autospec, self.kwargs
+        new_callable = self.new_callable
+>       self.target = self.getter()
+                      ^^^^^^^^^^^^^
+
+autospec   = None
+kwargs     = {}
+new        = sentinel.DEFAULT
+new_callable = None
+self       = <unittest.mock._patch object at 0x7eabc5247ed0>
+spec       = None
+spec_set   = None
+
+/usr/lib/python3.11/unittest/mock.py:1430: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial'
+
+    def resolve_name(name):
+        """
+        Resolve a name to an object.
+    
+        It is expected that `name` will be a string in one of the following
+        formats, where W is shorthand for a valid Python identifier and dot stands
+        for a literal period in these pseudo-regexes:
+    
+        W(.W)*
+        W(.W)*:(W(.W)*)?
+    
+        The first form is intended for backward compatibility only. It assumes that
+        some part of the dotted name is a package, and the rest is an object
+        somewhere within that package, possibly nested inside other objects.
+        Because the place where the package stops and the object hierarchy starts
+        can't be inferred by inspection, repeated attempts to import must be done
+        with this form.
+    
+        In the second form, the caller makes the division point clear through the
+        provision of a single colon: the dotted name to the left of the colon is a
+        package to be imported, and the dotted name to the right is the object
+        hierarchy within that package. Only one import is needed in this form. If
+        it ends with the colon, then a module object is returned.
+    
+        The function will return an object (which might be a module), or raise one
+        of the following exceptions:
+    
+        ValueError - if `name` isn't in a recognised format
+        ImportError - if an import failed when it shouldn't have
+        AttributeError - if a failure occurred when traversing the object hierarchy
+                         within the imported package to get to the desired object.
+        """
+        global _NAME_PATTERN
+        if _NAME_PATTERN is None:
+            # Lazy import to speedup Python startup time
+            import re
+            dotted_words = r'(?!\d)(\w+)(\.(?!\d)(\w+))*'
+            _NAME_PATTERN = re.compile(f'^(?P<pkg>{dotted_words})'
+                                       f'(?P<cln>:(?P<obj>{dotted_words})?)?$',
+                                       re.UNICODE)
+    
+        m = _NAME_PATTERN.match(name)
+        if not m:
+            raise ValueError(f'invalid format: {name!r}')
+        gd = m.groupdict()
+        if gd.get('cln'):
+            # there is a colon - a one-step import is all that's needed
+            mod = importlib.import_module(gd['pkg'])
+            parts = gd.get('obj')
+            parts = parts.split('.') if parts else []
+        else:
+            # no colon - have to iterate to find the package boundary
+            parts = name.split('.')
+            modname = parts.pop(0)
+            # first part *must* be a module/package.
+>           mod = importlib.import_module(modname)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+gd         = {'cln': None, 'obj': None, 'pkg': 'serial'}
+m          = <re.Match object; span=(0, 6), match='serial'>
+modname    = 'serial'
+name       = 'serial'
+parts      = []
+
+/usr/lib/python3.11/pkgutil.py:700: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                msg = ("the 'package' argument is required to perform a relative "
+                       "import for {!r}")
+                raise TypeError(msg.format(name))
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+level      = 0
+name       = 'serial'
+package    = None
+
+/usr/lib/python3.11/importlib/__init__.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', package = None, level = 0
+
+>   ???
+
+level      = 0
+name       = 'serial'
+package    = None
+
+<frozen importlib._bootstrap>:1204: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', import_ = <function _gcd_import at 0x7eabc6b4fd80>
+
+>   ???
+
+import_    = <function _gcd_import at 0x7eabc6b4fd80>
+module     = <object object at 0x7eabc6b84050>
+name       = 'serial'
+
+<frozen importlib._bootstrap>:1176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+name = 'serial', import_ = <function _gcd_import at 0x7eabc6b4fd80>
+
+>   ???
+E   ModuleNotFoundError: No module named 'serial'
+
+import_    = <function _gcd_import at 0x7eabc6b4fd80>
+name       = 'serial'
+parent     = ''
+parent_spec = None
+path       = None
+spec       = None
+
+<frozen importlib._bootstrap>:1140: ModuleNotFoundError
+============================== slowest durations ===============================
+0.07s call     tests/test_field.py::test_field_stability
+0.01s setup    tests/test_analysis.py::test_plot_rolling_average
+
+(249 durations < 0.005s hidden.  Use -vv to show these durations.)
+=========================== short test summary info ============================
+ERROR tests/test_heart_arduino_bridge.py::test_bridge_initialization - Module...
+ERROR tests/test_heart_arduino_bridge.py::test_send_heart_signals_normalization
+ERROR tests/test_heart_arduino_bridge.py::test_send_raw_values - ModuleNotFou...
+ERROR tests/test_heart_arduino_bridge.py::test_processor_link_update - Module...
+ERROR tests/test_heart_arduino_bridge.py::test_send_interval_throttling - Mod...
+ERROR tests/test_heart_arduino_bridge.py::test_get_state - ModuleNotFoundErro...
+ERROR tests/test_heart_arduino_bridge.py::test_reset - ModuleNotFoundError: N...
+========================= 79 passed, 7 errors in 1.14s =========================

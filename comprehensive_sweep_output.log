@@ -1,0 +1,41 @@
+================================================================================
+COMPREHENSIVE FULL-SPECTRUM PARAMETER SWEEP
+Primal Logic Robotic Hand Controller
+================================================================================
+
+Powered by Primal Tech Invest
+🔗 www.primaltechinvest.com
+
+================================================================================
+
+Total configurations: 600
+
+Parameter ranges:
+  - alpha_base: [0.3, 0.45, 0.54, 0.6, 0.75]
+  - beta_gain: [0.2, 0.5, 0.8, 1.2]
+  - theta: [0.6, 0.8, 1.0, 1.2, 1.5]
+  - torque_max: [0.5, 0.7, 0.9]
+  - memory_mode: ['exponential', 'recursive_planck']
+  - steps: 200
+
+Estimated time: ~10 seconds at 60 configs/sec
+
+Running sweep...
+
+
+================================================================================
+COMPREHENSIVE SWEEP COMPLETE
+================================================================================
+Results: experiments/runs/primal_kernel/20251127_134140_comprehensive_full_sweep
+
+Files generated:
+  📊 summary/summary.csv  (600 rows - all configs)
+  📈 summary/stats.json   (aggregated statistics)
+  📁 raw/sim_*.csv        (600 time series)
+  📝 REPORT.md            (human-readable summary)
+
+================================================================================
+
+Powered by Primal Tech Invest
+🔗 www.primaltechinvest.com
+
