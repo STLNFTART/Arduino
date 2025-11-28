@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Optional
 
 from .constants import (
     DONTE_CONSTANT,
@@ -26,6 +26,7 @@ from .constants import (
     LIGHTFOOT_MIN,
 )
 from .rpo import RecursivePlanckOperator
+from billing.rpo_burn_meter import RPOBurnMeter
 
 
 @dataclass
@@ -67,6 +68,9 @@ class MultiHeartModel:
     lightfoot: float = (LIGHTFOOT_MIN + LIGHTFOOT_MAX) / 2.0
     donte: float = DONTE_CONSTANT
     dt: float = DT
+    burn_meter: Optional[RPOBurnMeter] = None
+    planck_mode: bool = False
+    burn_meter_key: str = "multi_heart_model"
 
     state: HeartBrainState = field(default_factory=HeartBrainState)
     rpo_heart: RecursivePlanckOperator = field(init=False)
@@ -169,6 +173,10 @@ class MultiHeartModel:
         self.state.s_brain = self.state.n_brain * 0.5
 
         self.step_count += 1
+
+        if self.planck_mode and self.burn_meter is not None:
+            # Accrue time spent in Planck/recursive mode for token accounting.
+            self.burn_meter.record(self.burn_meter_key, self.dt)
         return self.state
 
     def get_heart_rate(self) -> float:

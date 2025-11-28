@@ -11,7 +11,7 @@ leverage real Pandas/Matplotlib or bundled offline fallbacks for air-gapped envi
 - Quantum-inspired field module that modulates controller gains based on coherence estimates.
 - Vector sweep tooling to benchmark controller responses across θ, α, β, and τ limits.
 - Rolling-average analytics and plotting powered by Pandas/Matplotlib (with optional stubs when
-  the real libraries are unavailable).
+ the real libraries are unavailable).
 - Git submodule linkage to [`MotorHandPro`](https://github.com/STLNFTART/MotorHandPro) for
   hardware-facing development.
 - Recursive Planck operator utilities that expose Donte and Lightfoot constants for advanced
@@ -105,6 +105,13 @@ artifacts so the workflow remains reproducible.
    python3 demos/demo_motorhand_integration.py --full --simulate --duration 5.0
    ```
 
+## RPO burn metering safety note
+
+The recursive actuator burn proof-of-concept (`demo_rpo_burn_poc.py` and `billing/rpo_burn_meter.py`) **never calls** a live
+Hedera network or smart contract. In both `dry_run` and `hedera_testnet` modes, the burn meter only appends CSV rows to
+`rpo_burn_log.csv` in the repository root for traceability. No blockchain keys or transactions are triggered when running any
+demo in this repository.
+
 ## Testing
 
 Basic unit tests and vector sweep regression checks live in `tests/`. Execute them with:
@@ -193,11 +200,11 @@ actuator control using consistent Primal Logic principles across both simulation
 
 **Key components**:
 
-- **`primal_logic/motorhand_integration.py`**: Bridge classes connecting the hand model to
+ - **`primal_logic/motorhand_integration.py`**: Bridge classes connecting the hand model to
   MotorHandPro hardware via serial communication (115200 baud).
-- **`MotorHandProBridge`**: Handles low-level serial communication, exponential memory weighting
+  - **`MotorHandProBridge`**: Handles low-level serial communication, exponential memory weighting
   of torque commands, control energy tracking, and Lipschitz stability monitoring.
-- **`UnifiedPrimalLogicController`**: High-level orchestrator integrating hand simulation, RPO
+  - **`UnifiedPrimalLogicController`**: High-level orchestrator integrating hand simulation, RPO
   microprocessor, heart-brain coupling, and hardware actuation in a single control loop.
 - **`demos/demo_motorhand_integration.py`**: Complete demonstration suite with basic connection
   test, hand simulation, and full integration modes.
@@ -247,3 +254,6 @@ python demos/demo_motorhand_integration.py --basic --port /dev/ttyACM0
 # Run full integration with all features
 python demos/demo_motorhand_integration.py --full --duration 10.0
 ```
+
+## Additional Resources
+- [RecursiveActuator Token Burn PoC](docs/RPO_BURN_POC.md)

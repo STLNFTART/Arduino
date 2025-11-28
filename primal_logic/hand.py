@@ -5,6 +5,8 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import List, Optional
 
+from billing.rpo_burn_meter import RPOBurnMeter
+
 from .adaptive import adaptive_alpha
 from .constants import (
     ALPHA_DEFAULT,
@@ -94,6 +96,9 @@ class RoboticHand:
     bridge: Optional[SerialHandBridge] = None
     memory_mode: str = "exponential"
     rpo_alpha: float = 0.4  # ensures alpha * dt < 1.0 for dt = 1e-3
+    burn_meter: Optional[RPOBurnMeter] = None
+    planck_mode: bool = False
+    burn_meter_key: str = "primal_logic_hand"
 
     states: List[List[JointState]] = field(init=False)
     controllers: List[List[HandJointController]] = field(init=False)
@@ -153,6 +158,10 @@ class RoboticHand:
 
         if self.bridge is not None:
             self.apply_torques()
+
+        if self.planck_mode and self.burn_meter is not None:
+            # Accrue time spent in recursive/Planck mode for token accounting.
+            self.burn_meter.record(self.burn_meter_key, self.dt)
 
     def get_angles(self) -> List[List[float]]:
         """Return a copy of all joint angles for downstream analysis."""
