@@ -2,3 +2,10 @@
 __pycache__/
 artifacts/
 *.pyc
+
+# Hedera credentials (contains private keys)
+.env.hedera
+*.env.hedera
+
+# Runtime burn logs (generated during execution)
+rpo_burn_log.csv
