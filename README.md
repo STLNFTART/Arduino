@@ -107,9 +107,9 @@ artifacts so the workflow remains reproducible.
 
 ## RPO burn metering safety note
 
-The recursive actuator burn proof-of-concept (`demo_rpo_burn_poc.py` and `billing/rpo_burn_meter.py`) **never calls** a live
+The recursive actuator burn proof-of-concept (`demo_rpo_burn_poc.py` and `billing/rpo_burn_meter.py`) a live
 Hedera network or smart contract. In both `dry_run` and `hedera_testnet` modes, the burn meter only appends CSV rows to
-`rpo_burn_log.csv` in the repository root for traceability. No blockchain keys or transactions are triggered when running any
+`rpo_burn_log.csv` in the repository root for traceability.blockchain transactions are triggered when running any
 demo in this repository.
 
 ## Testing
