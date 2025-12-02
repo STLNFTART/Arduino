@@ -1,0 +1,65 @@
+name: Dependabot Updates
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    name: Auto-merge Dependabot PRs
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+
+    steps:
+    - name: Fetch Dependabot metadata
+      id: metadata
+      uses: dependabot/fetch-metadata@v1
+      with:
+        github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+    - name: Auto-approve minor and patch updates
+      if: steps.metadata.outputs.update-type == 'version-update:semver-minor' || steps.metadata.outputs.update-type == 'version-update:semver-patch'
+      run: |
+        gh pr review --approve "$PR_URL"
+      env:
+        PR_URL: ${{ github.event.pull_request.html_url }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Comment on PR
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const updateType = '${{ steps.metadata.outputs.update-type }}';
+          const dependencyNames = '${{ steps.metadata.outputs.dependency-names }}';
+
+          let message = '🤖 **Dependabot Update Detected**\n\n';
+          message += `- **Dependencies**: ${dependencyNames}\n`;
+          message += `- **Update Type**: ${updateType}\n\n`;
+
+          if (updateType.includes('semver-minor') || updateType.includes('semver-patch')) {
+            message += '✅ This is a minor/patch update and has been auto-approved.\n';
+            message += 'If CI passes, this PR can be merged automatically.';
+          } else {
+            message += '⚠️ This is a major update. Please review carefully before merging.';
+          }
+
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: message
+          });
+
+    - name: Enable auto-merge for minor/patch updates
+      if: |
+        steps.metadata.outputs.update-type == 'version-update:semver-minor' ||
+        steps.metadata.outputs.update-type == 'version-update:semver-patch'
+      run: |
+        gh pr merge --auto --squash "$PR_URL"
+      env:
+        PR_URL: ${{ github.event.pull_request.html_url }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
