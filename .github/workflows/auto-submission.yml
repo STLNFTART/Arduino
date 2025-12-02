@@ -1,0 +1,146 @@
+name: Auto Submission
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+
+jobs:
+  validate-pr:
+    name: Validate Pull Request
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.sha }}
+        submodules: recursive
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest flake8
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install -e ".[dev,analysis]" || true
+
+    - name: Run quick validation
+      id: validation
+      run: |
+        echo "## 🔍 Auto Submission Validation" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+
+        # Check for syntax errors
+        echo "### Python Syntax Check" >> $GITHUB_STEP_SUMMARY
+        if flake8 . --count --select=E9,F63,F7,F82 --exclude=vendor,external --show-source --statistics; then
+          echo "✅ No syntax errors found" >> $GITHUB_STEP_SUMMARY
+          SYNTAX_OK=true
+        else
+          echo "❌ Syntax errors detected" >> $GITHUB_STEP_SUMMARY
+          SYNTAX_OK=false
+        fi
+
+        # Run basic tests
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "### Test Execution" >> $GITHUB_STEP_SUMMARY
+        if pytest --maxfail=1 -q; then
+          echo "✅ Tests passed" >> $GITHUB_STEP_SUMMARY
+          TESTS_OK=true
+        else
+          echo "⚠️ Some tests failed" >> $GITHUB_STEP_SUMMARY
+          TESTS_OK=false
+        fi
+
+        # Set output
+        if [ "$SYNTAX_OK" = true ] && [ "$TESTS_OK" = true ]; then
+          echo "status=success" >> $GITHUB_OUTPUT
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ **Validation passed - PR is ready for review**" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "status=failure" >> $GITHUB_OUTPUT
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "❌ **Validation failed - Please fix issues before merge**" >> $GITHUB_STEP_SUMMARY
+        fi
+
+    - name: Comment on PR
+      if: always()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const status = '${{ steps.validation.outputs.status }}';
+          const body = status === 'success'
+            ? '✅ **Auto-validation passed!** This PR is ready for review.\n\nAll syntax checks and tests completed successfully.'
+            : '⚠️ **Auto-validation detected issues.** Please review the workflow logs and fix any problems before merging.';
+
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: body
+          });
+
+  label-pr:
+    name: Auto Label PR
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Analyze PR changes
+      id: analyze
+      run: |
+        # Detect which files changed
+        CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.event.pull_request.head.sha }})
+
+        LABELS=""
+
+        if echo "$CHANGED_FILES" | grep -q "\.github/workflows/"; then
+          LABELS="$LABELS github-actions"
+        fi
+
+        if echo "$CHANGED_FILES" | grep -q "tests/"; then
+          LABELS="$LABELS tests"
+        fi
+
+        if echo "$CHANGED_FILES" | grep -q "\.md$"; then
+          LABELS="$LABELS documentation"
+        fi
+
+        if echo "$CHANGED_FILES" | grep -q "requirements.txt\|pyproject.toml"; then
+          LABELS="$LABELS dependencies"
+        fi
+
+        if echo "$CHANGED_FILES" | grep -qE "neurorobotic|demo.*\.py"; then
+          LABELS="$LABELS neurorobotic"
+        fi
+
+        echo "labels=$LABELS" >> $GITHUB_OUTPUT
+
+    - name: Apply labels
+      if: steps.analyze.outputs.labels != ''
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const labels = '${{ steps.analyze.outputs.labels }}'.split(' ').filter(l => l);
+          if (labels.length > 0) {
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: labels
+            });
+          }
