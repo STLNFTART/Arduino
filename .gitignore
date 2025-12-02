@@ -9,3 +9,4 @@ artifacts/
 
 # Runtime burn logs (generated during execution)
 rpo_burn_log.csv
+package-lock.json
