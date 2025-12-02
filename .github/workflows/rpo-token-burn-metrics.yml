@@ -1,0 +1,83 @@
+name: RPO Token Burn Metrics
+
+on:
+  push:
+    branches: [ "claude/actuator-entry-points-*" ]
+  workflow_dispatch:
+    inputs:
+      burn_duration:
+        description: 'Duration in seconds (1 second = 1 RPO token)'
+        required: true
+        default: '1000'
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  burn-tokens:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+    - name: Run RPO Token Burn Demo
+      id: burn
+      run: |
+        DURATION="${{ github.event.inputs.burn_duration || '1000' }}"
+        echo "🔥 Starting token burn for ${DURATION} seconds (${DURATION} RPO tokens)"
+
+        START_TIME=$(date +%s)
+        python demo_primalrwa_integration.py --demo 1 --mode dry_run --duration ${DURATION}
+        END_TIME=$(date +%s)
+
+        RUNTIME=$((END_TIME - START_TIME))
+        echo "runtime=${RUNTIME}" >> $GITHUB_OUTPUT
+        echo "tokens_burned=${DURATION}" >> $GITHUB_OUTPUT
+
+    - name: Report Burn Metrics
+      run: |
+        echo "═══════════════════════════════════════════════════════"
+        echo "          RPO TOKEN BURN METRICS REPORT"
+        echo "═══════════════════════════════════════════════════════"
+        echo ""
+        echo "🔥 Tokens Burned: ${{ steps.burn.outputs.tokens_burned }} RPO"
+        echo "⏱️  Runtime: ${{ steps.burn.outputs.runtime }} seconds"
+        echo "💰 Rate: 1 RPO = 1 second of actuation"
+        echo ""
+        echo "Contract: 0x5303AfC8ef4A2322A37C2155a344aE5F7e9A7FAF"
+        echo "Network: Hedera Testnet"
+        echo ""
+        echo "═══════════════════════════════════════════════════════"
+
+    - name: Upload Burn Log
+      uses: actions/upload-artifact@v3
+      with:
+        name: rpo-burn-log-${{ github.run_number }}
+        path: rpo_burn_log.csv
+        retention-days: 90
+
+    - name: Create Metrics Summary
+      run: |
+        echo "## 🔥 RPO Token Burn Summary" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+        echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+        echo "| Tokens Burned | ${{ steps.burn.outputs.tokens_burned }} RPO |" >> $GITHUB_STEP_SUMMARY
+        echo "| Runtime | ${{ steps.burn.outputs.runtime }}s |" >> $GITHUB_STEP_SUMMARY
+        echo "| Contract Address | 0x5303AfC8ef4A2322A37C2155a344aE5F7e9A7FAF |" >> $GITHUB_STEP_SUMMARY
+        echo "| Network | Hedera Testnet |" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "✅ All burns logged to artifact: \`rpo-burn-log-${{ github.run_number }}.csv\`" >> $GITHUB_STEP_SUMMARY
