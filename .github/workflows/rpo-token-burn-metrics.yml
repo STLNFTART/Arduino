@@ -79,7 +79,7 @@ jobs:
         echo "═══════════════════════════════════════════════════════"
 
     - name: Upload Burn Log
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v5
       if: always() && hashFiles('rpo_burn_log.csv') != ''
       with:
         name: rpo-burn-log-${{ github.run_number }}
